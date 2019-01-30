@@ -1,0 +1,360 @@
+
+# LC - 155 150 316 224 232 341 682 739 503 331 402, 394 272 636 591 735 85 84 42
+
+# -------------------------------------------------------------------------------------
+# BASIC OPERATIONS:
+
+class Stack:
+    def __init__(self):
+        self.stack = []
+
+    def push(self, item):   # Add or push which uses append()
+        self.stack.append(item)
+
+    def pop(self):          # Pop or remove which uses pop()
+        if len(self.stack) <= 0:
+            return ("No element in the Stack")
+        else:
+            return self.stack.pop()
+
+    def peek(self):     # peek() returns the top item from the stack but does not remove it.
+        return self.stack[-1]
+
+    def isEmpty(self):
+        return self.stack == []     # OR return len(stack) == 0
+
+    def size(self):
+        return len(self.stack)
+
+# -------------------------------------------------------------------------------------
+# 155. Min stack
+
+class MinStack:  # Imp: whenever you push on stack, push both (val, currMin)
+
+    def __init__(self):
+        self.q = []
+
+    def push(self, x):
+        curMin = self.getMin()
+        if curMin == None or x < curMin:
+            curMin = x
+        self.q.append((x, curMin)) # Smart - Each push stores kind of structure or we call tuple in python
+
+    def pop(self):
+        self.q.pop()
+
+    # @return an integer
+    def top(self):
+        if len(self.q) == 0:  # Good - took care of empty case
+            return None
+        else:
+            return self.q[-1][0]
+
+    # @return an integer
+    def getMin(self):
+        if len(self.q) == 0:  # again took care of empty case
+            return None
+        else:
+            return self.q[-1][1] # Current min is always on top (latest inserted w/ min value)
+
+
+# -------------------------------------------------------------------------------------
+# 150. Evaluate RPN
+
+class Solution(object):
+    def evalRPN(self, tokens):
+
+        stack = []
+        for t in tokens:
+
+            if t not in ["+", "-", "*", "/"]:
+                stack.append(int(t))
+
+            else:
+                r, l = stack.pop(), stack.pop()
+
+                if t == "+":
+                    stack.append(l+r)
+                elif t == "-":
+                    stack.append(l-r)
+                elif t == "*":
+                    stack.append(l*r)
+                else:
+                    stack.append(int(operator.truediv(l,r)))
+
+        return stack.pop()
+
+# -------------------------------------------------------------------------------------
+# 225. Implement Stack using Queues
+
+class MyStack(object):
+
+    def __init__(self):
+        self.stack = collections.deque([])
+
+    def push(self, x):
+        self.stack.append(x)
+
+    def pop(self):
+        for i in range(len(self.stack) - 1):
+            self.stack.append(self.stack.popleft())  # We use queue function to get stack functionality
+        return self.stack.popleft()
+        # return self.stack.pop() # This is also okay
+
+    def top(self):      # This is like peek in Java
+        return self.stack[-1]
+
+    # @return an boolean
+    def empty(self):
+        return len(self.stack) == 0
+
+# -------------------------------------------------------------------------------------
+# 232. Implement Queue using Stacks : Use two stacks to get FIFO property from LIFO
+
+class MyQueue(object):
+
+    def __init__(self):
+        self.stack1 = []  # To push the elements on stack S1. Helpful with push operation.
+        self.stack2 = []  # Helps to reverse the order of S1 to provide FIFO property.
+                          # Also s2 is helpful with pop() and peek() operation
+    def push(self, x):
+        self.stack1.append(x)
+
+    def pop(self):
+        if len(self.stack2)!=0:
+            return self.stack2.pop()  # Same as peek except we pop instead of stack2[-1]
+        else:
+            while len(self.stack1)!=0:
+                self.stack2.append(self.stack1.pop())
+            return self.stack2.pop()
+
+    def peek(self):
+        if len(self.stack2)!=0:
+            return self.stack2[-1]
+        else:
+            while len(self.stack1)!=0:
+                self.stack2.append(self.stack1.pop())
+            return self.stack2[-1]
+
+    def empty(self):
+        if len(self.stack1)==0 and len(self.stack2)==0: # Important - Verify both S1 and S2
+            return True
+        else:
+            return False
+
+# -------------------------------------------------------------------------------------
+# 224. Basic Calculator
+
+class Solution(object):
+    def calculate(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        res, num, sign, stack = 0, 0, 1, []
+
+        for ss in s:
+
+            if ss.isdigit():
+                num = 10*num + int(ss)
+
+            elif ss in ["-", "+"]:
+                res += sign*num
+                num = 0
+                sign = 1 if ss == "+" else -1
+
+            elif ss == "(":
+                stack.append(res)
+                stack.append(sign)
+                sign, res = 1, 0
+
+            elif ss == ")":
+                res += sign*num
+                res *= stack.pop()
+                res += stack.pop()
+                num = 0
+
+        return res + num*sign
+
+
+# -------------------------------------------------------------------------------------
+# 331: Verify PreOrder Serialization of a Binary Tree - Do NOT reconstruct the tree.
+
+# By replacing the top with hash you are shrinking tree's child to
+# null because you already process the child and all it's children.
+# we convert a node with two children null nodes into a null node. We continue
+# doing this, either iteratively or recursively, until we are left with just a null node.
+
+class Solution(object):
+    def isValidSerialization(self, preorder):
+        """
+        :type preorder: str
+        :rtype: bool
+        """
+
+        stack = []
+        top = -1
+        preorder = preorder.split(',')
+
+        for s in preorder:
+            stack.append(s)
+            top += 1
+
+            while(self.endsWithTwoHashes(stack,top)):
+                h = stack.pop()
+                top -= 1
+                h = stack.pop()
+                top -= 1
+
+                if top < 0:
+                    return False
+
+                h = stack.pop()
+                stack.append('#')
+
+        if len(stack) == 1:
+            if stack[0] == '#':
+                return True
+        return False
+
+    def endsWithTwoHashes(self,stack,top):
+        if top<1:
+            return False
+        if stack[top]=='#' and stack[top-1]=='#':
+            return True
+        return False
+
+# -------------------------------------------------------------------------------------
+# 682. Baseball Game
+
+#  Given a list of strings, each string can be one of the 4 following types:
+#  Integer (one round's score): Directly represents the number of points you get in this round.
+#  "+" (one round's score): Represents that the points you get in this round are the sum of the last two valid round's points.
+#  "D" (one round's score): Represents that the points you get in this round are the doubled data of the last valid round's points.
+#  "C" (an operation, which isn't a round's score): Represents the last valid round's points you get were invalid and should be removed
+
+class Solution(object):
+    def calPoints(self, ops):
+        """
+        :type ops: List[str]
+        :rtype: int
+        """
+        # Time: O(n)
+        # Space: O(n)
+
+        history = []
+        for op in ops:
+            if op == 'C':
+                history.pop()
+            elif op == 'D':
+                history.append(history[-1] * 2)
+            elif op == '+':
+                history.append(history[-1] + history[-2])
+            else:
+                history.append(int(op))
+        return sum(history)
+
+# -------------------------------------------------------------------------------------
+# 341. Flatten Nested List Iterator : Input - [1,[4,[6]]], Output - [1,4,6]
+
+# This is the interface that allows for creating nested lists.
+# You should not implement it, or speculate about its implementation
+
+#class NestedInteger(object):
+#    def isInteger(self):
+#        """
+#        @return True if this NestedInteger holds a single integer, rather than a nested list.
+#        :rtype bool
+#        """
+#
+#    def getInteger(self):
+#        """
+#        @return the single integer that this NestedInteger holds, if it holds a single integer
+#        Return None if this NestedInteger holds a nested list
+#        :rtype int
+#        """
+#
+#    def getList(self):
+#        """
+#        @return the nested list that this NestedInteger holds, if it holds a nested list
+#        Return None if this NestedInteger holds a single integer
+#        :rtype List[NestedInteger]
+#        """
+
+from collections import deque
+
+class NestedIterator(object):
+
+    def __init__(self, nestedList):
+
+        self.q = deque()
+        self.flatten(nestedList)  # Calling function
+
+    def flatten(self, nestedList):
+
+        for l in nestedList:
+            if l.isInteger():
+                self.q.append(l.getInteger())   # Basically only append integers and ignore all brackets
+            else:
+                self.flatten(l.getList())       # Ignoring rest, so call itself recursively.
+
+    def next(self):
+        return self.q.popleft() # Improvement: Popleft only if hasNext returns true else "Nothing to pop"
+
+    def hasNext(self):
+        """
+        :rtype: bool
+        """
+        return len(self.q) > 0
+
+# -------------------------------------------------------------------------------------
+# 503. Next Greater Element II
+# Given a circular array, print the Next Greater Number for every element.
+
+# Typical pattern to solve circular array problems is to extend the original array to twice
+# length, 2nd half has the same element as first half. Then everything become simple.
+
+class Solution:
+    def nextGreaterElements(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        stack = []
+        res = [-1]*len(nums)
+        n = len(nums)
+
+        for i in range(0, 2*n):
+            while stack and nums[i%n] > nums[stack[-1]]:
+                top = stack.pop()
+                if res[top] == -1:
+                    res[top] = nums[i%n]
+            stack.append(i%n)
+        return res
+
+# -------------------------------------------------------------------------------------
+# 739. Daily Temperatures
+
+class Solution(object):
+    def dailyTemperatures(self, temps):
+        """
+        :type T: List[int]
+        :rtype: List[int]
+        """
+
+        result = [0] * len(temps)
+        stack = []
+
+        for curr_idx, curr_temp in enumerate(temps):
+
+            while stack and curr_temp > stack[-1][1]:
+                last_idx, last_temp = stack.pop()
+                result[last_idx] = curr_idx - last_idx
+
+            stack.append((curr_idx, curr_temp))
+
+        return result
+
+# -------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------

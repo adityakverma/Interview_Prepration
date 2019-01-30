@@ -1,0 +1,43 @@
+
+Theory:
+
+# interactivepython.org
+
+# http://interactivepython.org/runestone/static/pythonds/index.html
+# http://interactivepython.org/runestone/static/pythonds/BasicDS/ImplementingaStackinPython.html
+# http://interactivepython.org/runestone/static/pythonds/BasicDS/TheStackAbstractDataType.html
+
+# https://www.geeksforgeeks.org/stack-data-structure/
+
+Problems:
+
+Few problems from Geekforgeeks, I-bits, then all problemns of Leetcode
+
+#######################################################################
+
+https://www.geeksforgeeks.org/stack-data-structure-introduction-program/
+
+Time Complexities of operations on stack:
+
+push(), pop(), isEmpty() and peek() all take O(1) time. We do not run any loop
+in any of these operations.
+
+Applications of stack:
+
+    Balancing of symbols
+    Infix to Postfix /Prefix conversion
+    Redo-undo features at many places like editors, photoshop.
+    Forward and backward feature in web browsers
+    Used in many algorithms like Tower of Hanoi, tree traversals, stock span problem, histogram problem.
+    Other applications can be Backtracking, Knight tour problem, rat in a maze, N queen problem and sudoku solver
+
+Implementation:
+There are two ways to implement a stack:
+
+    Using array
+    Using linked list
+
+
+
+
+
