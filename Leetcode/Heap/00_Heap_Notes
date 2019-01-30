@@ -1,0 +1,63 @@
+
+# ---------------------------------------------------------------------------
+# [Aditya] : Introduction:
+
+# Heaps are binary trees for which every parent
+# node has a value less than or equal to any of its children.
+# Priority Queue are implemented using Binary Heap
+#
+# Operation of heapq DS are:
+# -------------------------
+# heappop - pop and return the smallest element from heap
+# heappush - push the value item onto the heap, maintaining heap invarient
+# heapify - transform list into heap, in place, in linear time
+
+# Operation in MinHeap : https://www.youtube.com/watch?v=uZj0hetLFHU
+# --------------------
+# Note extractMin() is removing min from root, which is opposite of insert().
+# But delete(i) is deleting any specific key from anywhere in tree unlike
+# extractMin.
+#
+# So in delete(i, -infi), we first replace that key with -ve infinite and
+# do minHeapify ( by calling decereaseKey()). So root has now -infi. Now we
+# do extractMin(), which will delete root (-infi) and move last element of heap
+# to root and again re-adjust nodes (minHeapify)  as per for minHeap property.
+#
+# getMin() is just getting root value heap[0] ( not extracting or
+# removing). Basically we re-adjust( minHeapify) twice when we delete node 'i'
+#
+# insert() is just regular insert at end of heap and then do minHeapify. In
+# python heappush() inserts new key and does minHeapify
+
+# Applications of Heap :
+# ----------------------
+# Priority Queue are implemented using Binary Heap because it supports
+# insert(), delete() and extractmax(), decreaseKey() operations in O(logn) time
+# In other words, Heap DS (Binary heap or MinHeap) is used to represent
+# Priority Queue.
+
+# Priority Queue is similar to queue where we insert an element from the back and
+# remove an element from front (FIFO or LILO) , but with a difference that the logical
+# order of elements in the priority queue depends on the priority of the elements. The
+# element with highest priority will be moved to the front of the queue and one with
+# lowest priority will move to the back of the queue. Thus it is possible that when
+# you enqueue an element at the back in the queue, it can move to front because of its
+# highest priority.
+#
+
+# -------------------------
+# By default heapify creates MinHeap (Binary Tree) from given array.
+
+# listForTree1 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+# heapq.heapify(listForTree1)             # for a min heap
+# print "\nMin Heap:", listForTree1
+
+# listForTree2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+# heapq._heapify_max(listForTree2)        # for a maxheap!!
+# print "\nMax Heap:", listForTree2
+# ----------------------------------------------------------------------------
+
+# To maintain a max heap. We can use a minheap, with negative values.
+# ----------------------------------------------------------------------------
+
+
