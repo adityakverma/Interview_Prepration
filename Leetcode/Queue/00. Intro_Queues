@@ -1,0 +1,70 @@
+
+Theory:
+
+# https://www.geeksforgeeks.org/queue-data-structure/
+
+# http://interactivepython.org/runestone/static/pythonds/index.html
+# http://interactivepython.org/runestone/static/pythonds/BasicDS/ImplementingaQueueinPython.html
+# http://interactivepython.org/runestone/static/pythonds/BasicDS/TheQueueAbstractDataType.html
+
+Problems:
+
+Few problesm from Geekforgeeks, Ibits, then all problemns of Leetcode
+
+##################################
+
+
+Operations on Queue:
+Mainly the following four basic operations are performed on queue:
+
+FIFO :
+Enqueue: Adds an item to the queue. If the queue is full, then it is said to be an Overflow condition.
+Dequeue: Removes an item from the queue. The items are popped in the same order in which they are pushed. If the queue is empty, then it is said to be an Underflow condition.
+[Aditya]: NOTE: Insertion and deletion happens at different end.
+
+Front: Get the front item from queue.
+Rear: Get the last item from queue.
+
+--------------------------------------
+
+https://www.geeksforgeeks.org/queue-set-1introduction-and-array-implementation/
+
+Applications of Queue:
+Queue is used when things don’t have to be processed immediatly, but have to be processed in First InFirst Out order like Breadth First Search. This property of Queue makes it also useful in following kind of scenarios.
+
+1) When a resource is shared among multiple consumers. Examples include CPU scheduling, Disk Scheduling.
+2) When data is transferred asynchronously (data not necessarily received at same rate as sent) between two processes. Examples include IO Buffers, pipes, file IO, etc.
+
+See this for more detailed applications of Queue and Stack.
+
+######################################
+
+The queue abstract data type is defined by the following structure and operations. A queue is structured, as described above, as an ordered collection of items which are added at one end, called the “rear,” and removed from the other end, called the “front.” Queues maintain a FIFO ordering property. The queue operations are given below.
+
+    Queue() creates a new queue that is empty. It needs no parameters and returns an empty queue.
+    enqueue(item) adds a new item to the rear of the queue. It needs the item and returns nothing.
+    dequeue() removes the front item from the queue. It needs no parameters and returns the item. The queue is modified.
+    isEmpty() tests to see whether the queue is empty. It needs no parameters and returns a boolean value.
+    size() returns the number of items in the queue. It needs no parameters and returns an integer.
+
+As an example, if we assume that q is a queue that has been created and is currently empty, then Table 1 shows the results of a sequence of queue operations. The queue contents are shown such that the front is on the right. 4 was the first item enqueued so it is the first item returned by dequeue.
+Queue Operation 	Queue Contents 	Return Value
+q.isEmpty() 	[] 	True
+q.enqueue(4) 	[4]
+q.enqueue('dog') 	['dog',4]
+q.enqueue(True) 	[True,'dog',4]
+q.size() 	[True,'dog',4] 	3
+q.isEmpty() 	[True,'dog',4] 	False
+q.enqueue(8.4) 	[8.4,True,'dog',4]
+q.dequeue() 	[8.4,True,'dog'] 	4
+q.dequeue() 	[8.4,True] 	'dog'
+q.size() 	[8.4,True] 	2
+
+
+Time Complexity: Time complexity of all operations like enqueue(), dequeue(), isFull(), isEmpty(), front() and
+rear() is O(1). There is no loop in any of the operations.
+
+
+
+
+
