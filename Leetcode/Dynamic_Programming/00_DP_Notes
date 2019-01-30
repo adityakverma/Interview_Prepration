@@ -1,0 +1,701 @@
+
+In REAL Interviews:
+
+Concept/Approach - How you plan to solve
+Code it with all corner cases [ Ofcourse you dont need to submit on LC during onsite :) ]
+Explain time complexity and space complexity
+
+So dont worry too much, if you code doesn't get ACCEPTED on LC
+If you know concept/approach to solve. What ( why) DS you choose.
+Clear code with all corner cases should be good.
+
+--------------------------------------------------------------
+# Top DP Problems as per LC :
+
+# 5 53 121 10 139 91 85 300 70 312 198 221 152 887 140
+# 523 44 647 279 698 410 689 471 847 746 730 871 357 363 377 354
+# 516 464 494 813 213 673 265 568 727 486 375 351 638 256 818 321
+# 32 72 -Balaji
+# --------------------------------------------------------------
+
+# Other type categorization:
+# LC 5 647  62 63 64  70 91 746   122 121 714 309 53
+# 198 213  10 44  152 221 523 698 357 312   516 300 312 279
+# 279 343 204 [ Math based ]
+
+# ------------------------------------------------------------------------------------------
+LC-053: Maximum Subarray : Using Kadane Algorithm for DP
+
+class Solution: : Bottom Up Approach
+
+    def maxSubArray_DP(self, nums):  # Using DP. O(n) Space : Looks like Kadane
+        if not nums:
+            return None
+
+        dp = [0] * len(nums)
+        res = dp[0] = nums[0]
+
+        for i in xrange(1, len(nums)):
+            dp[i] = max(dp[i - 1] + nums[i], nums[i])
+        return max(dp)
+
+# ---------------------------------------------------------------
+LC-121: Best time to buy and sell stocks I - Doesn't look like DP problem ?
+
+class Solution:
+
+    def maxProfit(self, prices):  # NOTE : USE KADANE's algo (DP) only if values are negative
+
+        if not prices or len(prices) < 2:
+            return 0
+
+        import sys
+        lowestprice = sys.maxint
+
+        maxprofit = 0
+        for i in range(len(prices)):
+
+            if prices[i] < lowestprice:
+                lowestprice = prices[i]
+
+            if prices[i] - lowestprice > maxprofit:
+                maxprofit = prices[i] - lowestprice
+
+        return maxprofit
+
+# ---------------------------------------------------------------
+LC-122: Best time to buy and sell stocks II -  Doesn't look like DP problem ?
+
+class Solution:
+
+    def maxProfit(self, prices):
+
+        if not prices:
+            return 0
+        maxprofit = 0
+
+        for i in range(len(prices) - 1):
+            if prices[i] <= prices[i + 1]:
+                profit = prices[i + 1] - prices[i]
+                maxprofit += profit
+        return maxprofit
+
+
+# ---------------------------------------------------------------
+LC-091. Decode Ways : Bottom Up Approach
+
+class Solution:
+    def numDecodings(self, s):
+
+        if not s or s[0] == '0':
+            return 0
+
+        n = len(s)
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        dp[1] = 1
+
+        for i in range(1, n):
+            if int(s[i]) > 0:
+                dp[i + 1] = dp[i]
+
+            if int(s[i - 1:i + 1]) <= 26 and int(s[i - 1:i + 1]) > 9:
+                dp[i + 1] += dp[i - 1]
+
+        return dp[n]
+
+# ---------------------------------------------------------------
+LC-070. Climbing Stairs : Bottom Up Approach
+
+class Solution():
+    def climbStairs(self, n):
+
+        dp = [0] * (n + 1)  # the way to declare the array. Note its different from list.
+
+        if n == 0: return 1
+        if n == 1: return 1
+        dp[0] = 1
+        dp[1] = 1
+
+        for i in range(2, n + 1):
+            dp[i] = dp[i - 1] + dp[i - 2]  # If n =5, so No on of ways to reach 4 plus 1 step ( dp[4] +1) plus no of ways to reach 3 plus 2 (dp[3] +2)
+
+        return dp[n]
+
+# ---------------------------------------------------------------
+LC-062. Unique Paths : Idea is at every grid we add ways to reach from top dp[i - 1][j] and  right dp[i][j - 1]
+# so total ways is reach that cell is  ( dp[i][j - 1] + dp[i - 1][j]) so we save this value in dp array of that
+# position dp[i][j]
+
+class Solution: : Bottom Up Approach
+
+    def uniquePaths(self, m, n):  # m is column and n is rows ( as per question)
+
+        dp = [[1 for x in range(n)] for x in range(m)] # Initialization
+
+        for i in range(1, m):
+            for j in range(1, n):
+
+                dp[i][j] = dp[i][j - 1] + dp[i - 1][j]  # Update all cells except top row and left most column.
+
+        return dp[-1][-1]
+
+# ---------------------------------------------------------------
+LC-063. Unique Paths II ( with obstacle) : Bottom Up Approach
+
+class Solution(object): : Bottom Up Approach
+
+    def uniquePathsWithObstacles(self, obstacleGrid):
+
+        N, M = len(obstacleGrid), len(obstacleGrid[0])
+        dp = [[1 for x in range(M)] for y in range(N)]
+
+        if obstacleGrid[0][0] == 0:
+            dp[0][0] = 1
+        else:
+            return 0
+
+        for i in range(N):
+            for j in range(M):
+
+                if obstacleGrid[i][j] == 1:  # If we find obstacle
+                    dp[i][j] = 0             # Mark that cell as 0 in dp matrix. and it reduces path count for next futher cells meaning that path was eleminated and count decreses.
+                else:
+                    if i == 0:
+                        dp[i][j] = dp[i][j-1]
+                    elif j == 0:
+                        dp[i][j] = dp[i-1][j]
+                    else:
+                        dp[i][j] = dp[i][j-1] + dp[i-1][j]
+        return dp[-1][-1]
+
+# ---------------------------------------------------------------
+# LC-064. Minimum Path Sum: : Bottom Up Approach
+
+class Solution():
+
+    # O(m*n) space
+    def minPathSum(self, grid):
+
+        if not grid:
+            return
+
+        r, c = len(grid), len(grid[0])
+        dp = [[0 for _ in xrange(c)] for _ in xrange(r)]
+
+        dp[0][0] = grid[0][0]
+
+        for i in xrange(1, r):  # For 0th Col, update row values. Basically update leftmost row.
+            dp[i][0] = dp[i-1][0] + grid[i][0]
+
+        for i in xrange(1, c):  # For 0th row, update all col values. Basically update top row
+            dp[0][i] = dp[0][i-1] + grid[0][i]
+
+        for i in xrange(1, len(grid)):
+            for j in xrange(1, len(grid[0])):
+                dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]   # Update all cells except top row and left most column.
+
+        return dp[-1][-1]
+
+
+    # DP, No extra space - change the grid itself.
+    def minPathSum4(self, grid):
+        if not grid:
+            return
+        r, c = len(grid), len(grid[0])
+
+        for i in xrange(1, c):
+            grid[0][i] = grid[0][i] + grid[0][i-1]
+
+        for i in xrange(1, r):
+            grid[i][0] = grid[i][0] + grid[i-1][0]
+
+        for i in xrange(1, r):
+            for j in xrange(1, c):
+                grid[i][j] += min(grid[i-1][j], grid[i][j-1])
+
+        return grid[-1][-1]
+
+# ---------------------------------------------------------------
+LC-198 House Robber : Bottom Up Approach
+
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+
+        if len(nums) == 1:
+            return nums[0]
+
+        dp = [0] * len(nums)
+        dp[0], dp[1] = nums[0], max(nums[0], nums[1])
+
+        for i in range(2, len(nums)):
+            dp[i] = max(dp[i-2] + nums[i], dp[i-1])  # Since we need to rob alternate houses so dp[i-2] + num[i]
+
+        return dp[-1]
+
+# ---------------------------------------------------------------
+LC-213. House Robber II : Bottom Up Approach
+
+class Solution:
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        n = len(nums)
+        if n < 3:
+            return max(nums)
+        v1 = self.get_rob(nums, 0, n - 1)
+        v2 = self.get_rob(nums, 1, n)  # Breaking into 2 windows becoz 1st and last can't be together. So break & get max of both window.
+        return max(v1, v2)
+
+    def get_rob(self, nums, start, end):
+
+        dp = [0] * (end - start)
+
+        dp[0] = nums[start]
+        dp[1] = max(dp[0], nums[start + 1])
+
+        for i in range(2, end - start):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[start + i])
+
+        return dp[-1]
+
+> Time Complexity O(N)
+> Space Complexity O(1)
+
+These all are bottom up approach.
+
+# ---------------------------------------------------------------
+Check those 3 DP problems from Maths
+LC-343. Integer Break
+
+class Solution(object):
+    def integerBreak(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n == 2: return 1
+        res = [1] * (n+1)
+        for i in range(2,n+1):
+            for j in range(1,i):
+                _max = max(j * res[i-j], j * (i-j))
+                res[i] = max(res[i], _max)
+        return res[n]
+
+# ---------------------------------------------------------------
+LC-204. Count Primes - # Bottom Up Approach
+
+class Solution(object):
+    def countPrimes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        memo = [False] * n
+        count = 0
+        for i in range(2, n):
+            if memo[i] == False:
+                count += 1
+
+                # And mark all muliple as True, so we avoid check if we see again
+                for j in xrange(2, (n - 1) // i + 1):
+                    memo[i * j] = True
+        return count
+
+# ---------------------------------------------------------------
+LC-279. Perfect Squares - # Bottom Up Approach
+
+class Solution(object):
+    numSquaresDP = [0]
+
+    def numSquares(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        s = []
+        if len(self.numSquaresDP) <= n:
+            perfectSqr = [v ** 2 for v in xrange(1, int(math.sqrt(n)) + 1)]
+            print perfectSqr
+
+            for i in xrange(len(self.numSquaresDP), n + 1):
+                for sqr in perfectSqr:
+                    if sqr <= i:
+                        j = 1 + self.numSquaresDP[i - sqr]
+                        s.append(j)
+                self.numSquaresDP.append(min(s))
+                s = []  # clear the list before finding the min of next number
+
+                # self.numSquaresDP.append( min(1 + self.numSquaresDP[i - sqr] for sqr in perfectSqr if sqr <= i))
+
+        return self.numSquaresDP[n]
+
+# ---------------------------------------------------------------
+LC-516. Longest Palindrome Subsequence - # Bottom Up Approach
+
+class Soltion():
+
+    def longestPalindromeSubseq(self, s):
+
+        if s == s[::-1]:
+            return len(s)
+
+        n = len(s)
+        dp = [[0 for j in range(n)] for i in range(n)]
+
+        for i in range(n - 1, -1, -1):
+            dp[i][i] = 1
+            for j in range(i + 1, n):
+
+                if s[i] == s[j]:
+                    dp[i][j] = 2 + dp[i + 1][j - 1] # 2 + look diagonally left down which is row+1 and col-1. Note [0][0] is on left top.
+                else:
+                    dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]) # if s[i] != s[j] then its either of inner groups which were pre-computed.
+
+        return dp[0][n - 1]
+
+    # This is solved using both bottom up and top down. See LC516 on pycharm.
+
+# ---------------------------------------------------------------
+LC-746. Min Cost Climbing Stairs - # Bottom Up Approach
+
+class Solution:
+    def minCostClimbingStairs(self, cost):
+        """
+        :type cost: List[int]
+        :rtype: int
+        """
+        dp = [0] * (len(cost))
+
+        dp[0] = cost[0]
+        dp[1] = cost[1]
+
+        for i in range(2, len(cost)):
+            dp[i] = min(dp[i - 2] + cost[i], dp[i - 1] + cost[i])
+
+        return min(dp[-2], dp[-1])  # OR simply return dp[-1]
+
+    # Good Link to see soltion both TopDown and BottomUp methods:
+    # https://leetcode.com/problems/min-cost-climbing-stairs/discuss/212517/python
+
+# ---------------------------------------------------------------
+LC-300. Longest Increasing Subsequence - # Bottom Up Approach
+
+class Solution:
+    def lengthOfLIS(self, nums):
+        if not nums: return 0
+        dp = [1] * len(nums)
+
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[j] < nums[i]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+
+        return max(dp)
+
+# ---------------------------------------------------------------
+LC-354. Russian Doll Envelopes - # Bottom Up Approach
+
+class Solution:
+    def maxEnvelopes(self, envelopes):
+        """
+        :type envelopes: List[List[int]]
+        :rtype: int
+        """
+        if not envelopes:
+            return 0
+
+        l = len(envelopes)
+        if l == 1:
+            return 1
+
+        # Let's sort with increasing order of width x[0], but if two envelope have same width then sort with decreasing height x[1].
+        envelopes.sort(key=lambda x: ( x[0], -x[1]))  # because when the width is the same, the envelope with greater height comes first.
+
+        width = []
+        for i in envelopes:
+            width.append(i[1])
+
+        res = self.longestSubsequence(width)
+        # the problem became LIS after sort(width)
+
+        return res
+
+    def longestSubsequence(self, nums):
+        """
+        return type: int (number of longest subsequence)
+        """
+        if not nums: return 0
+        dp = [1] * len(nums)
+
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[j] < nums[i]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+
+        return max(dp)
+
+# ---------------------------------------------------------------
+LC-221. Maximal Square - # Bottom Up Approach
+
+class Solution:
+    def maximalSquare(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        if not matrix: return 0
+        m , n = len(matrix), len(matrix[0])
+        dp = [[ int(matrix[i][j]) for j in range(0, n)] for i in range(0, m)] # Just copy matrix to dp array.
+
+        for i in range(1, m):       # Note: We consider from 2nd row & col onwards, so we can check previous row and cols for min square.
+            for j in range(1, n):
+                if matrix[i][j] == '1':
+                    dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1 # Check
+                else:
+                    dp[i][j] = 0
+
+        res = max(max(row) for row in dp)
+        return res ** 2
+
+    # Check this video to Tushar Roy : https://www.youtube.com/watch?v=_Lf1looyJMU
+    # O(mn) time and O(mn) space
+
+# ---------------------------------------------------------------
+LC-139 Word Break I  - # Bottom Up Approach
+
+class Solution(object):
+
+    # https://leetcode.com/problems/word-break/discuss/44009/Concise-Python-DP-solution
+    def wordBreak(self, s, wordDict):
+
+        n = len(s)
+        dp = [False] * (n+1) # dp is an array that contains booleans
+        dp[0] = True  # This helps to get first matchable string from wordDict with given 'if' condition below.
+
+        for i in xrange(1,n+1):
+            for j in xrange(0,i): # Seems like Kadane where we check previous precomputed results stored at is_breakable[i]
+
+                if dp[j] and s[j:i] in wordDict:
+                    dp[i] = True  # dp[i] is True if dp[j] was found before in worddict from past computation. And remaining word is also present in dict.
+                    break         # Breaks from immediate for loop. Not all for loops.
+
+        return dp[-1] # Last should be True, meanaing whole string is breakable
+
+# ---------------------------------------------------------------
+LC-140 Word Break II
+
+
+
+# ---------------------------------------------------------------
+LC-312: Burst Ballons - # Bottom Up Approach
+
+class Solution(object):
+
+    def maxCoins(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        nums = [1] + nums + [1]
+        n = len(nums)
+        dp = [[0] * n for _ in xrange(n)]
+
+        def calculate(i, j):
+
+            if dp[i][j] or j == i + 1:  # in memory or gap < 2 ( because we added one extra ballon on each side)
+                return dp[i][j]
+
+            coins = 0
+            for k in xrange(i + 1, j):  # find the last balloon
+                coins = max(coins, nums[i] * nums[k] * nums[j] + calculate(i, k) + calculate(k, j))
+            dp[i][j] = coins
+            return coins
+
+        return calculate(0, n - 1)
+
+# ---------------------------------------------------------------
+LC-10 Regular Expression Matching - # Bottom Up Approach
+
+class Solution:
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        # -----------------
+        # Without DP:
+
+        if not p:
+            return not s
+
+        first_match = bool(s) and p[0] in {s[0], '.'}
+
+        if len(p) >= 2 and p[1] == '*':
+            return (self.isMatch(s, p[2:]) or
+                    first_match and self.isMatch(s[1:], p))
+        else:
+            return first_match and self.isMatch(s[1:], p[1:])
+
+        # -------------------
+        '''
+
+        # DP solution w.r.t Tushar Roy's video https://www.youtube.com/watch?v=l3hda49XcDE&t=14s
+        # https://leetcode.com/problems/regular-expression-matching/discuss/182669/Easy-10-line-DP-Python-solution-with-explanation
+
+        m = len(s)
+        n = len(p)
+        dp = [[False for i in range(n+1)] for j in range(m+1)] # dp[i][j] stores the result of isMatch(s[:i], p[:j])
+        dp[0][0] = True # s[:0] = '', p[:0] = '', isMatch("","") is True
+
+        for i in range(2,n+1): # corner case: '' can match with expressions like 'a*b*c*.*'
+            dp[0][i] = dp[0][i-2] and p[i-1] == '*'
+
+        for i in range(1,m+1):
+            for j in range(1,n+1):
+
+                if p[j-1] != '*':
+                    dp[i][j] = dp[i-1][j-1] and (s[i-1] == p[j-1] or p[j-1] == ".")
+                else:   # current pattern p[j-1] is '*', we need to know the preceding element p[j-2]
+                    dp[i][j] = dp[i][j-2] or ((s[i-1] == p[j-2] or p[j-2] == '.' ) and dp[i-1][j])
+
+        return dp[m][n]
+        '''
+        # Time and Space Complexity are same which is O(m*n)
+
+# ---------------------------------------------------------------
+LC-044. Wildcard Matching. - # Bottom Up Approach
+
+class Solution:
+    def isMatch(self, s, p):
+        """
+        :type s: str
+        :type p: str
+        :rtype: bool
+        """
+        N1 = len(p)
+        N2 = len(s)
+        dp = [[False for j in range(N2+1)] for i in range(N1+1)]
+        for i in range(N1+1):
+
+            for j in range(N2+1):
+                if(i==0 and j==0):
+                    dp[i][j]=True
+
+                elif(j==0):
+                    dp[i][j]= (N1>0 and i>0 and p[i-1]=='*' and (dp[i-1][j]));
+                elif(i==0):
+                    dp[i][j]= (N1>0 and i>0 and p[i-1]=='*' and (dp[i][j-1]));
+
+                else:
+                    dp[i][j]=((dp[i-1][j-1] and (N1>0 and N2>0 and p[i-1]==s[j-1]))or
+                              (N1>0 and p[i-1]=='*' and (dp[i-1][j] or dp[i][j-1])) or
+                              (N1>0 and p[i-1]=='?' and dp[i-1][j-1]))
+        return dp[N1][N2]
+
+        # Based on Tushar Roy: https://www.youtube.com/watch?v=3ZDZ-N0EPV0&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr&index=25&t=26s
+
+
+# ---------------------------------------------------------------
+LC-085. Maximal Rectangle - # Bottom Up Approach
+Note: This is completely different from LC221 Maximal Square:
+
+class Solution(object):  # ACCEPTED
+
+    # The solution is based on largest rectangle in histogram solution. Every row in the matrix is viewed as the ground with some
+    # buildings on it. The building height is the count of consecutive 1s from that row to above rows. The rest is then the same as
+    # this solution for largest rectangle in histogram
+
+    def maximalRectangle(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+
+        if not matrix or not matrix[0]:
+            return 0
+
+        n = len(matrix[0])
+        height = [0] * (n + 1)  # DP Array, which we update for each row of input matrix. Note we do n+1 because see LC-84
+        ans = 0
+
+        for row in matrix:
+
+            # Update height array for current row based on previous row's height array [dp] and input matrix. This was input in LC-084
+            for i in range(n):
+                height[i] = height[i] + 1 if row[i] == '1' else 0
+
+            # Now below is way to find max rectangle in histogram. LC-084
+            # The stack maintain the indexes of buildings with ascending height. Before adding a new building pop the
+            # building who is taller than the new one. The building popped out represent the height of a rectangle with
+            # the new building as the right boundary and the current stack top as the left boundary. Calculate its area
+            # and update ans of maximum area. Boundary is handled using dummy buildings.
+
+            stack = [-1]
+            for i in range(n + 1):
+                while height[i] < height[stack[-1]]:
+                    h = height[stack.pop()]
+                    w = i - 1 - stack[-1]
+                    ans = max(ans, h * w)
+                stack.append(i)
+
+        return ans
+
+# ---------------------------------------------------------------
+LC-152: Maximum Product Subarray
+
+class Solution:
+    def maxProduct(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+
+        dp_max = [0] * n  # DP array to maintain max
+        dp_min = [0] * n  # DP array to maintain min - Becoz in case like [2,3,-2,-4] we have two -ve so this array will help to get +48
+        dp_max[0], dp_min[0] = nums[0], nums[0]
+
+        for i in range(1, n):
+            if nums[i] > 0:
+                dp_max[i] = max(dp_max[i - 1] * nums[i], nums[i])
+                dp_min[i] = min(dp_min[i - 1] * nums[i], nums[i])
+
+            elif nums[i] < 0:
+                dp_max[i] = max(dp_min[i - 1] * nums[i], nums[i])
+                dp_min[i] = min(dp_max[i - 1] * nums[i], nums[i])
+
+            else:
+                dp_max[i] = 0
+                dp_min[i] = 0
+
+        #print (dp_max, dp_min)
+        return max(dp_max)
+
+# Also check LC-53- Same concept
+
+# ---------------------------------------------------------------
+LC-377:
+
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# ---------------------------------------------------------------
+
+

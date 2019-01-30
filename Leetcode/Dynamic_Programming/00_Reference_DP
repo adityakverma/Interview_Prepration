@@ -1,0 +1,85 @@
+
+# https://www.hackerearth.com/practice/algorithms/dynamic-programming/introduction-to-dynamic-programming-1/tutorial/
+# https://www.tutorialspoint.com/data_structures_algorithms/dynamic_programming.htm
+# https://www.codechef.com/wiki/tutorial-dynamic-programming
+
+# VIDEOS
+=========
+# https://www.youtube.com/watch?v=P8Xa2BitN3I # Gayle - HackerRank - DONE
+# https://www.youtube.com/watch?v=vYquumk4nWw # CS Dojo - DONE
+# https://www.youtube.com/watch?v=RHVkCLWS_T0 # Eugene - Tech Interviews and Competitive Programming Meetup
+
+# https://www.youtube.com/watch?v=OQ5jsbhAv_M&t=309s  # MIT
+# https://www.youtube.com/watch?v=8LusJS5-AGo&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr  # Tushar Roy
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+10/29/2018
+----------
+
+https://www.youtube.com/watch?v=5dRGRueKU3M
+https://www.youtube.com/watch?v=8LusJS5-AGo&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr
+https://www.youtube.com/watch?v=mmjDZGSr7EA&list=PLqM7alHXFySGbXhWx7sBJEwY2DnhDjmxm
+https://www.youtube.com/watch?v=vYquumk4nWw
+https://www.youtube.com/watch?v=GdxBjbjUo0w&list=PLRKxhQQOfTrmGI32jyGmUyH3AVQl1Jc0X
+
+------------
+LC-10: Regular Expression Matching
+https://leetcode.com/articles/regular-expression-matching/#
+https://www.youtube.com/watch?v=l3hda49XcDE
+
+LC-44: Wildcard Matching
+https://www.youtube.com/watch?v=3ZDZ-N0EPV0
+
+------------------------------------------------------------------------------------------
+
+516. Longest Palindromic Subsequence
+https://www.youtube.com/watch?v=_nCsPn7_OgI&index=9&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr
+
+10. Regular Expression Dynamic Programming
+https://www.youtube.com/watch?v=l3hda49XcDE&index=18&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr
+
+121. Buy/Sell Stock With K transactions To Maximize Profit Dynamic Programming
+https://www.youtube.com/watch?v=oDhu5uGq_ic&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr&index=19
+
+44. Wildcard Matching Dynamic Programming
+https://www.youtube.com/watch?v=3ZDZ-N0EPV0&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr&index=24
+
+746. Staircase Problem Fibonacci Series [ LC 746 - Min Cost Climbing Stairs]
+https://www.youtube.com/watch?v=CFQk7OQO_xM&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr&index=31
+
+300. Longest Increasing Subsequence
+https://www.youtube.com/watch?v=CE2b_-XfVDk&index=8&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr
+
+140. Word Break Problem Dynamic Programming
+https://www.youtube.com/watch?v=WepWFGxiwRs&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr&index=20
+
+312: Burst Ballons
+https://www.youtube.com/watch?v=IFNibRVgFBo&index=29&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr
+
+----------------------------------------------------------------------------------------------
+
+--DP--
+Palindrome Partitioning
+Palindrome Partitioning II
+House Robber, II, III
+Jump Game, II
+Best Time to Buy and Sell Stock , II, III , IV
+Dungeon Game
+Minimum Path Sum
+Unique Paths
+Decode Ways
+Coin Change
+Perfect Squares
+
+--DP--2D--
+Edit Distance
+Distinct Subsequences Total
+Longest Palindromic Substring
+Longest Common Subsequence
+Longest Common Substring
+
+
+
+
