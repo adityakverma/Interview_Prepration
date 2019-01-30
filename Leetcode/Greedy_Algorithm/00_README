@@ -1,0 +1,109 @@
+
+========================================================================================================================
+
+A greedy algorithm is an algorithmic strategy that makes the best optimal choice at each small stage with the goal of this eventually leading to a globally optimum solution. This means that the algorithm picks the best solution at the moment without regard for consequences.
+Algorithms are called greedy when they utilize the greedy choice property and/or always make the locally optimal choice.
+
+========================================================================================================================
+
+Problems and Applications:
+
+Minimum Jump ( Jump Game LC 45,55) where you greedily jump as far as you can to minimise jumps. Similarly remember we used this trick in  Dijkstra's Algo. Dijkstra's shortest path algorithm. Greedy Algo-7. Given a graph and a source vertex in the graph, find shortest paths from source to all vertices in the given
+Coin change - Whenever picking which coin to use, you'd take the highest-value coin you could. A quarter, another quarter, then a dime, a nickel, and finally two pennies. That's a greedy algorithm, because you're always greedily choosing the coin that covers the biggest portion of the remaining amount.
+Meeting Rooms II (LC-253): Trying to fit as many overlapping meetings as possible in a conference room? At each step, schedule the meeting that ends earliest
+Gas Station LC 134
+Task Scheduler LC 621
+Best Time to Buy and Sell Stock II LC 122
+
+
+** Careful: sometimes a greedy algorithm doesn't give you an optimal solution:. Greed is not always good- you may end up with a non-optimal solution
+
+Most networking algorithms uses greedy approach. Here is the list of few of them:
+
+    Travelling Salesman Problem.
+    Prim's Minimal Spanning Tree Algorithm.
+    Kruskal's Minimal Spanning Tree Algorithm.
+    Dijkstra's Minimal Spanning Tree Algorithm.
+    Graph - Map Coloring.
+    Graph - Vertex Cover.
+    Knapsack Problem.
+    Job Scheduling Problem.
+
+========================================================================================================================
+
+Difference between greedy algorithm and dynamic programming
+
+Greed algorithm : Greedy algorithm is one which finds the feasible solution at every stage with the hope of finding global optimum solution.
+Dynamic Programming : Dynamic programming is one which breaks up the problem into series of overlapping sub-problems.
+
+Difference between greedy method and dynamic programming are given below :
+
+    Greedy algorithm is one which finds feasible solution at every stage with the hope of finding optimal solution whereas Dynamic programming is one which break the problems into series of overlapping sub-problems.
+    Greedy algorithm never reconsiders its choices whereas Dynamic programming may consider the previous state.
+    Greedy algorithm is less efficient whereas Dynamic programming is more efficient.
+    Greedy algorithm have a local choice of the sub-problems whereas Dynamic programming would solve the all sub-problems and then select one that would lead to an optimal solution.
+    Greedy algorithm take decision in one time whereas Dynamic programming take decision at every stage.
+    Greedy algorithm work based on choice property whereas Dynamic programming work based on principle of optimality.
+    Greedy algorithm follows the top-down strategy whereas Dynamic programming follows the bottom-up strategy.
+
+# https://www.quora.com/Whats-the-difference-between-greedy-algorithm-and-dynamic-programming-Is-a-greedy-program-a-subset-of-dynamic-programming
+# https://medium.com/cracking-the-data-science-interview/greedy-algorithm-and-dynamic-programming-a8c019928405
+
+========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Algorithm types we will consider include:
+
+    Simple recursive algorithms.
+    Backtracking algorithms.
+    Divide and conquer algorithms.
+    Dynamic programming algorithms.
+    Greedy algorithms.
+    Branch and bound algorithms.
+    Brute force algorithms.
+    Randomized algorithms.
