@@ -1,0 +1,238 @@
+
+
+
+class Solution_LC039(object):	# 39. Combination Sum
+
+    def combinationSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.backtrack(nums, 0, [], target, res) # NOTE: Here target is new parameter as we're trying to reduce number to see if matches
+        return res
+                
+    def backtrack(self, nums, start, cur, target, res):
+        
+        if target == 0:
+            res.append(cur[:])
+            return     # return and then pop ( which is backtracking)
+        
+        elif target > 0:
+            for i in range(start, len(nums)):
+                cur.append(nums[i])
+                self.backtrack(nums, i, cur, target - nums[i], res)  # See note below
+                cur.pop()
+    
+    # Note: 39 is different with 40 in same style as LC-46 is with 47
+    # Important Note: Here in backtrack call, we are not incrementing i unlike all cases because we can consider 
+      same number twice to get target. This is not dups in input, but we are allowed to re-use numbers from input. See the example
+
+---------------------------------------------------------------------------------------------------------------
+
+class Solution(object):	# 40. Combination Sum II
+
+    def combinationSum2_LC040(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        nums.sort(reverse= True)
+        self.backtrack(nums, 0, [], target, res)
+        return res
+            
+    def backtrack(self, nums, start, cur, target, res): # Taget is new parameter here compared to other problems 
+        
+        if target == 0:
+            res.append(cur[:])
+            return              # return back and then pop (which is backtracking)
+        
+        elif target > 0:
+            for i in range(start, len(nums)):
+                if i > start and nums[i] == nums[i-1]: # i>start is actually making sure- ONLY get 1st instance (& no dups)
+                    continue                                         
+                cur.append(nums[i])
+                self.backtrack(nums, i+1, cur, target - nums[i], res)
+                cur.pop()
+
+   
+    # Couple os points:
+    # =================
+    
+    # 1. We increment the i during recursive call to conside next position.
+    # 2. To elimate the dups from the input, we sort and then compare with previous ( is same then skip/continue. Line 21)
+    # 3. There is no visited array here unlike LC-47 because here order dosen't matter. Its not permuation. Its combination. OR
+    #    Way this is different from LC-47 (Permutation problem-II) - Here we are not tracking positions( or order). So no visited array. 
+    # 4. See how we have considered target parameter which reduces on every recursive calls. This is new parameter
+    # 5. Make sure we return (line 17), so when condition is met, append answer and return and pop ( which is backtracking)
+    # 6. See how this is different from LC-39 where we are not incrementing i because same input can be considered multiple times.
+    # 7. LC-39 and 40 are different in same way like (LC-46 is with 47) and so is (LC-78 is with 90)
+
+
+---------------------------------------------------------------------------------------------------------------
+
+class Solution_LC216(object):	# 216. Combination Sum III
+
+    def combinationSum3(self, k, n):
+        """
+        :type k: int
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        
+        if n > sum([i for i in range(1, 11)]):  # Corner case, where n=1000 and sum from 1-9 can never fulfil that number, so return [].
+            return []
+
+        res = []
+        self.backtrack(k, n, 1, [], res)
+        return res
+
+
+    def backtrack(self, k, n, start, cur, res):
+        if len(cur) == k:
+            if sum(cur) == n:
+                res.append(list(cur))
+            return
+
+        if len(cur) > k or start > 9:   # Again corner case where size of cur > k OR start > 9 [start needs within 9]
+            return
+        
+        for i in range(start, 10):  # start is updated - Just like LC-077
+            cur.append(i)
+            self.backtrack(k, n, i + 1, cur, res)
+            cur.pop()
+
+---------------------------------------------------------------------------------------------------------------
+
+class Solution_LC077(object):   # 77. Combinations
+    def combine(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.backtrack(n,k,1,[],res)
+        return res
+    
+    def backtrack(self, n, k, start, cur, res):
+        
+        if k == len(cur):
+            res.append(copy.deepcopy(cur)) # Deep copy, else its all empty
+            return # return and then pop (which is backtracking)
+            
+        for i in range(start,n+1): # Note here we are not starting from 1 everytime, instead we are using 'start', which is actually i+1
+            cur.append(i)
+            self.backtrack(n, k, i+1, cur, res) # As i in incrementing, so we moving to next position or next number. 
+            cur.pop()
+            
+        # https://www.geeksforgeeks.org/copy-python-deep-copy-shallow-copy/
+
+---------------------------------------------------------------------------------------------------------------
+
+class Solution(object):	# 78. Subsets
+
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        if len(nums) < 1:
+            return 0
+        self.backtrack_LC078(nums,0, [], res)
+        return res
+
+    def backtrack_LC078(self, nums, start, cur, res):
+        res.append(cur[:])  # No if condition, since we need all possibilities unlike LC-46. Also no return
+        
+        for i in range(start,len(nums)):
+            cur.append(nums[i])
+            self.backtrack_LC078(nums, i+1, cur, res) 
+            cur.pop()
+
+---------------------------------------------------------------------------------------------------------------
+
+class Solution(object):	# 90. Subsets II
+
+    def subsetsWithDup(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        nums.sort()
+        self.backtrack(nums, 0, [], res)
+        return res
+
+    def backtrack(self, nums, start, cur, res):
+        res.append(cur[:])
+        for i in range(start, len(nums)):
+            if i > start and nums[i] == nums[i-1]:
+                continue
+            cur.append(nums[i])
+            self.backtrack(nums, i+1, cur, res)
+            cur.pop()
+
+---------------------------------------------------------------------------------------------------------------
+
+
+class Solution(object):	# 46. Permutations
+
+    def permute(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.backtrack(nums, 0, res)
+        return res
+    
+    def backtrack(self, nums, start, res):
+        if start == len(nums):
+            res.append(nums[:])
+            return              # return back and pop ( which is backtracking)
+
+        for i in range(start, len(nums)):
+            nums[start], nums[i] = nums[i], nums[start]     # choose i for start position
+            self.backtrack(nums, start+1, res)              # Incrementing start means: Considering options of i for next position
+            nums[start], nums[i] = nums[i], nums[start]     # unchoose after return - backtracking
+            
+     
+    # Idea is - Filling in available ( or remaining) options for different positions ( as we move from left to right) 
+
+
+---------------------------------------------------------------------------------------------------------------
+
+class Solution(object):	# 47. Permutations II
+
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        res = []
+        visited = [False] * len(nums) # Use an extra boolean array to indicate whether the value is added to list.
+        nums.sort()   # Sort the array "int[] nums" to make sure we can skip the same value. 
+        self.backtrack(nums, visited, [], res)
+        return res
+    
+    def backtrack(self, nums, visited, cur, res):
+        if len(cur) == len(nums):
+            res.append(cur[:])
+        else:
+            for i in range(len(nums)):
+                if visited[i] or (i > 0 and nums[i-1] == nums[i] and visited[i-1]):
+                    continue
+
+                visited[i] = True
+                cur.append(nums[i])
+                self.backtrack(nums, visited, cur, res)
+                cur.pop()
+                visited[i] = False
+
+
+---------------------------------------------------------------------------------------------------------------

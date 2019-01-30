@@ -1,0 +1,120 @@
+
+-----------------------
+BACKTRACING:
+
+Backtracking is trying out all possibilities using recursion, exactly like bruteforce.
+
+https://www.hackerearth.com/practice/basic-programming/recursion/recursion-and-backtracking/tutorial/  <==== Good to start
+
+https://www.interviewbit.com/courses/programming/topics/backtracking/   <===== See VIDEOS and problems
+
+https://www.geeksforgeeks.org/backtracking-algorithms/  <== SEE problems. Example: Word Breaking
+
+-----------------------
+RECURSION:
+
+# http://interactivepython.org/runestone/static/pythonds/Recursion/toctree.html
+
+# https://www.geeksforgeeks.org/recursion/
+
+---------------------------------------------------------------------------------------------
+https://www.interviewbit.com/courses/programming/topics/backtracking/
+
+Backtracking
+
+Backtracking is trying out all possibilities using recursion, exactly like bruteforce.
+Suppose you have to make a series of decisions, among various choices, where :
+
+  * You don’t have enough information to know what to choose
+  * Each decision leads to a new set of choices
+  * Some sequence of choices (possibly more than one) may be a solution to your problem
+
+Backtracking is a methodical way of trying out various sequences of decisions, until you find one that “works”.
+
+Lets look at an example to explain this further.
+
+Given a maze, find if a path from start to finish
+
+At each intersection, you have to decide between three or fewer choices:
+
+    * Go straight
+    * Go left
+    * Go right
+
+You don’t have enough information to choose correctly. Each choice leads to another set of choices. One or more sequences of choices may (or may not) lead to a solution.
+So, you explore each option thoroughly and once you cannot find a solution using the option selected, you come back and try one of the remaining options.
+
+---------------------------------------------------------------------------------------------
+
+
+Backtracking Pseudocode
+
+A pseudocode for the above question would be :
+
+        boolean pathFound(Position p) {
+            if (p is finish) return true;
+
+            foreach option O from p {
+                boolean isThereAPath = pathFound(O);
+                if (isThereAPath) return true; // We found a path using option O
+            }
+            // We have tried all options from this position and none of the options lead to finish.
+            // Hence there is no solution possible to finish
+            return false;
+        }
+
+In general, the usual pseudocode for any backtracking solution is :
+
+        boolean solve(Node n) {
+            if n is a goal node, return true
+
+            foreach option O possible from n {
+                if solve(O) succeeds, return true
+            }
+            return false
+        }
+
+
+---------------------------------------------------------------------------------------------
+
+
+
+https://loveforprogramming.quora.com/Backtracking-Memoization-Dynamic-Programming  <=== NICE
+
+https://stackoverflow.com/questions/3592943/difference-between-back-tracking-and-dynamic-programming
+
+    Dynamic programming is a method of solving complex problems by breaking them down into simpler steps. It is applicable to problems that exhibit the properties of overlapping subproblems which are only slightly smaller and optimal substructure.
+
+    Backtracking is a general algorithm for finding all (or some) solutions to some computational problem, that incrementally builds candidates to the solutions, and abandons each partial candidate c ("backtracks") as soon as it determines that c cannot possibly be completed to a valid solution.
+
+Common problems for backtracking I can think of are:
+
+    Eight queen puzzle
+    Map coloring
+    Sodoku ?
+
+DP problems:
+
+    This website at MIT has a good collection of DP problems with nice animated explanations.
+    A chapter from a book from a professor at Berkeley.
+
+
+----------------------
+
+Dynamic programming is process of taking a problem, splitting it up into subproblems, and using the solutions to these subproblems to solve the original problem.
+
+Backtracking, however, attempts to find a solution that fits some sort of constraint and it goes about finding this solution by expanding on partial solutions. The backtracking part comes into play when a solution violates a constraint and we stop expanding that solution and “backtrack” to another partial solution that doesn’t violate any constraints.
+
+Common dynamic programming problems include the longest increasing subsequence, edit distance between two strings, chain matrix multiplication, independent sets in trees, etc
+
+Common problems that use backtracking include constraint satisfaction problems such as 3-SAT, N-queens, map coloring, etc.
+
+
+
+One more difference could be that Dynamic programming problems usually rely on the principle of optimality. The principle of optimality states that an optimal sequence of decision or choices each sub sequence must also be optimal.
+
+Backtracking problems are usually NOT optimal on their way! They can only be applied to problems which admit the concept of partial candidate solution.
+
+
+
+
