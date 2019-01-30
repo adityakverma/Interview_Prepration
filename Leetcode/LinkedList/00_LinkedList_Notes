@@ -1,0 +1,555 @@
+
+
+Leetcode Problems: 138 21 23 25 160 445 237 725 61 707 2 206 234 141 24
+
+###########################################################################
+
+# This is best example to understand complete Linked List basic operations
+# LC-707
+
+class Node(object):
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+class MyLinkedList(object):
+    def __init__(self):
+        self.head = None
+        self.size = 0
+
+    def get(self, index):
+
+        if index < 0 or index >= self.size:
+            return -1
+
+        if self.head is None:
+            return -1
+
+        curr = self.head
+        for i in range(index):
+            curr = curr.next
+        return curr.val
+
+    def addAtHead(self, val):
+
+        node = Node(val)
+        node.next = self.head
+        self.head = node
+
+        self.size += 1
+
+    def addAtTail(self, val):
+
+        curr = self.head
+        if curr is None:
+            self.head = Node(val)
+        else:
+            while curr.next is not None:
+                curr = curr.next
+            curr.next = Node(val)
+
+        self.size += 1
+
+    def addAtIndex(self, index, val):
+
+        if index < 0 or index > self.size:
+            return
+
+        if index == 0:
+            self.addAtHead(val)
+        else:
+            curr = self.head
+            for i in range(index - 1):
+                curr = curr.next
+            node = Node(val)
+            node.next = curr.next
+            curr.next = node
+
+            self.size += 1
+
+    def deleteAtIndex(self, index):
+
+        if index < 0 or index >= self.size:
+            return
+
+        curr = self.head
+        if index == 0:
+            self.head = curr.next
+        else:
+            for i in range(index - 1):
+                curr = curr.next
+            curr.next = curr.next.next
+
+        self.size -= 1
+
+# -------------------------------------------------------------------------
+# 2. Add Two Numbers.
+
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+
+        ret = ListNode(0)
+        cur = ret
+        carry = 0
+
+        while l1 or l2 or carry:
+            val = (l1.val if l1 else 0) + (l2.val if l2 else 0) + carry
+
+            cur.next = ListNode( val % 10)  # Just started with first value addition from here, where we create first node for added value.
+            carry = val / 10     # So in case of 6+4, where make listnode of 0 ( as 10%10=0 ) and add=1 (10/10=1), which
+                                 # is added with next value i.e. 3+4+1=8
+            cur = cur.next
+
+            l1 = l1.next if l1 else None    # Increment L1 list
+            l2 = l2.next if l2 else None    # Increment L2 list
+
+        return ret.next
+
+# -------------------------------------------------------------------------
+# 445. Add Two Numbers II. Note- The most significant digit comes first unlike before.
+# Also you cannot modify the input lists. In other words, you can't reverse the lists.
+
+class Solution(object):
+
+    def addTwoNumbers(self, l1, l2):
+
+        stack1, stack2 = [], []
+        while l1:
+            stack1.append(l1.val)
+            l1 = l1.next
+        while l2:
+            stack2.append(l2.val)
+            l2 = l2.next
+
+        carry, tail = 0, None
+        while stack1 or stack2 or carry:
+            v1 = v2 = 0
+            if stack1:
+                v1 = stack1.pop()  # This is good option to pop from stacks, instead of reversing the Linkedlist
+            if stack2:
+                v2 = stack2.pop()
+            carry, value = divmod(v1+v2+carry, 10)
+
+            node = ListNode(value)
+            node.next = tail       # We keep growing from right to left, so tail is updated.
+            tail = node
+
+        return node
+
+# -------------------------------------------------------------------------
+# 206. Reverse Linked List
+
+class Solution(object):
+
+    def reverseList(self, head):
+        if head is None:
+            return head
+
+        prev = None
+        while head:
+            tail = head.next
+            head.next = prev
+
+            prev = head
+            head = tail
+
+        return prev
+
+# -------------------------------------------------------------------------
+# 234. Palindrome Linked List
+
+class Solution(object):
+    def isPalindrome(self, head):
+
+        fast = slow = head
+
+        # find the mid node
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+
+        # reverse the second half
+        prev = None
+        while slow:  # Slow now points to midpoint or head of 2nd half
+            nxt = slow.next
+            slow.next = prev # Link backwards
+
+            prev = slow
+            slow = nxt
+
+        # compare the first and second half nodes.
+        while head and prev:
+            if prev.val != head.val:
+                return False
+            prev = prev.next
+            head = head.next
+        return True
+
+# -------------------------------------------------------------------------
+# 141. Linked List Cycle
+
+class Solution(object):
+
+    def hasCycle(self, head):
+        slow = fast = head
+        while fast and fast.next:  # This way we do not need to check if head is null.
+
+            fast = fast.next.next
+            slow = slow.next
+
+            if slow == fast:
+                return True
+
+        return False
+# -------------------------------------------------------------------------
+# 160. Intersection of Two Linked Lists
+
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        if headA is None or headB is None:
+            return None
+
+        pa = headA # 2 pointers
+        pb = headB
+
+        while pa != pb:
+
+            pa = headB if pa is None else pa.next
+            pb = headA if pb is None else pb.next
+
+        return pa # only 2 ways to get out of the loop, they meet or the both hit the end=None
+                  # So if there is any answer possible then definately you will get in second
+                  # iteration ( i.e before both hit end=None)
+
+# -------------------------------------------------------------------------
+#  21. Merge Two Sorted Lists
+
+class Solution(object):
+
+    def mergeTwoLists(self, l1, l2):
+
+        if not l1: return l2
+        if not l2: return l1
+
+        if l1.val < l2.val:
+            head = l1
+            l1 = l1.next
+        else:
+            head = l2
+            l2 = l2.next
+
+        node = head
+        while l1 and l2:
+            if l1.val < l2.val:
+                node.next = l1
+                l1 = l1.next
+            else:
+                node.next = l2
+                l2 = l2.next
+            node = node.next
+
+        if l1:
+            node.next = l1
+        if l2:
+            node.next = l2
+
+        # OR node.next = l1 if l1 else l2
+        return head
+
+    # =========== METHOD2 =====================
+
+    def mergeTwoList(self, l1, l2):
+
+        if not l1: return l2
+        if not l2: return l1
+
+        curr = head = ListNode(0)  # <== using Dummy node and then return dummy.next
+        while l1 and l2:
+            if l1.val < l2.val:
+                curr.next = l1
+                l1 = l1.next
+            else:
+                curr.next = l2
+                l2 = l2.next
+            curr = curr.next
+
+        curr.next = l1 if l1 else l2
+        return head.next
+
+# -------------------------------------------------------------------------
+# 23. Merge k Sorted Lists
+
+class Solution(object):
+
+    def mergeKLists(self, lists):
+
+        totalLists = len(lists)
+        interval = 1
+        while interval < totalLists:
+
+            for i in range(0, totalLists - interval, interval * 2):    # 1st combine l0,l1 making new l0; then l2,l3 making new l2, so on..
+                lists[i] = self.mergeTwoList(lists[i], lists[i + interval])
+
+            interval *= 2   # Then combine new l0 and new l2 and so on..
+        return lists[0] if totalLists > 0 else lists
+
+    def mergeTwoList(self, l1, l2):
+
+        if not l1: return l2
+        if not l2: return l1
+
+        curr = head = ListNode(0)  # <== using Dummy node and then return dummy.next
+        while l1 and l2:
+            if l1.val < l2.val:
+                curr.next = l1
+                l1 = l1.next
+            else:
+                curr.next = l2
+                l2 = l2.next
+            curr = curr.next
+
+        curr.next = l1 if l1 else l2
+        return head.next
+
+    # Space complexity : O(1)
+    # Time complexity : O(N log k) where k is the number of linked lists.
+    # ----------------------------------
+
+    # Method-02.
+    def mergeKLists(self, lists):
+
+        self.nodes = []
+        head = point = ListNode(0)
+
+        for l in lists:
+            while l:
+                self.nodes.append(l.val) # Traverse all LL and store values to array.
+                l = l.next
+
+        for x in sorted(self.nodes): # Sort and iterate over this array to get the proper value of nodes.
+            point.next = ListNode(x) # Create a new sorted linked list and extend it with the new nodes.
+            point = point.next
+
+        return head.next
+
+# -------------------------------------------------------------------------
+# 24. Swap Nodes in Pairs
+# Please see the image we saved for this.
+
+class Solution(object):
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+
+        res = prev = ListNode(0)
+        res.next = head
+
+        while head and head.next:
+            tmp = head.next
+
+            prev.next = tmp         # step a
+            head.next = tmp.next    # step b
+            tmp.next = head         # step c
+
+            prev = head
+            head = head.next
+
+        return res.next
+
+# -------------------------------------------------------------------------
+# 25. Reverse Nodes in k-Group
+
+class Solution(object):
+
+    def reverseKGroup(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        # sentinel makes it so that we can cleanly pass curr.next into reverseK,
+        # which we want to do because we want to update curr.next to the next group's new head
+        sentinel = ListNode(0)
+        sentinel.next = head
+
+        # Step-01: Find count for groups/blocks in the linked list
+        curr = sentinel
+        length = 0
+        while curr.next is not None:
+            curr = curr.next
+            length += 1
+        blocks = length/k
+
+        # Step-02: Iterate through the list and reverse groups of size k
+        curr = sentinel
+        counter = 0
+        while curr is not None and blocks > 0:
+            if counter % k == 0:
+                curr.next = self.reverseK(curr.next, k)
+                blocks -= 1
+            curr = curr.next
+            counter += 1
+        return sentinel.next
+
+
+    def reverseK(self, head, k): # Regular Reverse algo with blocks of size K.
+        i = 0
+        prev = None
+        curr = head  # Note: Before this function returns head is updated for start of next block.
+        while i < k: # Same as 'while head' logic, but since we are dealing with blocks of K instead of going till end.
+
+            tail = curr.next
+            curr.next = prev # Flip pointer
+
+            prev = curr
+            curr = tail
+            i += 1
+
+        head.next = tail # head is now the tail of the reversed group, so we set its next to the start of the next group
+        return prev      # return the head of the reversed group, which was the tail of the original group
+
+# -------------------------------------------------------------------------
+# 138. Copy List with Random Pointer
+
+# Definition for singly-linked list with a random pointer.
+class RandomListNode(object):
+    def __init__(self, x):
+        self.label = x
+        self.next = None
+        self.random = None
+
+class Solution(object):
+    """
+    :type head: RandomListNode
+    :rtype: RandomListNode
+    """
+    def __init__(self):
+        # Dictionary which holds old nodes as keys and new nodes as its values.
+        self.visitedHash = {}
+
+    # Copying List means creating new node for each unseen nodes and link them.
+    def copyRandomList(self, head):
+
+        if head == None:
+            return None
+
+        # If we have already processed the current node, then we simply return the cloned version of it.
+        if head in self.visitedHash:
+            return self.visitedHash[head]
+
+
+        # create a new node with the label same as old node. Copying List means creating new node for each unseen nodes and link them.
+        node = RandomListNode(head.label)
+        # Save this value in the hash map. This is needed since there might be loops during traversal due to random pointers.
+        self.visitedHash[head] = node
+
+
+        # Recursively copy the remaining linked list starting once from the next pointer and then from the random pointer.
+        # Thus we have two independent recursive calls. Finally we update the next and random pointers for the new node created.
+        node.next = self.copyRandomList(head.next)
+        node.random = self.copyRandomList(head.random)
+
+        return node
+		
+# -------------------------------------------------------------------------
+# 725. Split Linked List in Parts
+
+class Solution(object):
+    def splitListToParts(self, root, k):
+        cur = root
+        for N in xrange(1001):
+            if not cur: break
+            cur = cur.next
+        width, remainder = divmod(N, k)
+
+        ans = []
+        cur = root
+        for i in xrange(k):
+            head = write = ListNode(None)
+            for j in xrange(width + (i < remainder)):
+                write.next = write = ListNode(cur.val)
+                if cur: cur = cur.next
+            ans.append(head.next)
+        return ans
+
+# -------------------------------------------------------------------------
+# 109: Convert Sorted list to BST
+
+class Solution(object):
+
+    # Solution based on finding middle of Linked list using two pointers and then making
+    # middle as root. And then make tree - left subtree from head to middle and right
+    # subtree from middle to end of linked list.
+
+    def sortedListToBST_(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+
+        if not head:
+            return
+        if not head.next:
+            return TreeNode(head.val)
+
+        slow = head
+        fast = head.next.next  ### IMP: checkout LC-141 and LC-234 to see how we get mid pointer. Here we have tweaked somehow else it give [RuntimeError: maximum recursion depth exceeded]
+
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+
+        # tmp points to node after mid, since slow will be at middle
+        tmp = slow.next
+        # cut down the left child
+        slow.next = None
+
+        root = TreeNode(tmp.val)
+        root.left = self.sortedListToBST(head)
+        root.right = self.sortedListToBST(tmp.next)
+
+        return root
+		
+# -------------------------------------------------------------------------
+# 61. Rotate List
+
+class Solution(object):
+    def rotateRight(self, head, k):
+        """
+        :type head: ListNode
+        :type k: int
+        :rtype: ListNode
+        """
+        if not head:
+            return None
+        if not head.next:
+            return head
+        pp = head
+        count = 0
+        while pp:
+            pp = pp.next
+            count += 1
+        for i in range((k%count)):
+            head = self.rotate(head)
+        return head
+        
+    def rotate(self, head):
+        p = head
+        pre = None
+        while head.next:
+            pre, head = head, head.next
+        head.next = p
+        pre.next = None
+        return head
+	
+# -------------------------------------------------------------------------
+	
+
+
+

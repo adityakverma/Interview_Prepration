@@ -1,0 +1,204 @@
+
+######################### BASICS ###########################
+
+class Node:
+    # Function to initialise the node object
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+
+# Linked List class contains a Node object
+class LinkedList:
+
+    def __init__(self):
+        self.head = None
+
+    # -------------------------------------------------------
+    # Function to insert a new node at the beginning
+    def push(self, new_data):
+
+        if self.head is None:
+            self.head = Node(data)
+            return
+
+        new = Node(data)
+        new.next = self.head
+
+        self.head = new_node # Move the head to point to new Node
+
+    # -------------------------------------------------------
+    # Inserts a new node after the given prev_node.
+    def insertAfter(self, prev, new_data):
+
+        if prev is None:
+            return          # The given previous node must inLinkedList.
+
+        new = Node(new_data)
+        new.next = prev.next
+        prev.next = new
+
+    # -------------------------------------------------------
+    # Appends a new node at the end.  This method is
+    def append(self, new_data):
+
+        if self.head is None:
+            self.head = Node(new_data)
+            return
+
+        last = self.head
+        while (last.next):
+            last = last.next
+        last.next = new_node
+
+    # -------------------------------------------------------
+    # Utility function to print the linked list
+    def printList(self):
+        temp = self.head
+        while (temp):
+            print temp.data,
+            temp = temp.next
+    # -------------------------------------------------------
+
+    # This is special case - assuming few things in LC-237.
+    def deleteNode(self, node): # Do not return anything, modify node in-place instead.
+        node.val, node.next = node.next.val, node.next.next
+
+    # ---------------------------------------------------------
+
+    # class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+    def removeElements(self, head, val):
+        """
+        :type head: ListNode
+        :type val: int
+        :rtype: ListNode  # Imp: We return head, which is good enough
+        """
+
+        while head is not None and head.val == val:
+            head = head.next
+
+        current = head
+        while current is not None:
+            if current.next is not None and current.next.val == val:
+                current.next = current.next.next
+            else:
+                current = current.next
+
+        return head
+
+    # ---------------------------------------------------------
+
+###########################################################################
+
+# This is best example to understand complete Linked List basic operations
+# LC-707
+
+class Node(object):
+
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+class MyLinkedList(object):
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.head = None
+        self.size = 0
+
+    def get(self, index):
+        """
+        Get the value of the index-th node in the linked list. If the index is invalid, return -1.
+        :type index: int
+        :rtype: int
+        """
+        if index < 0 or index >= self.size:
+            return -1
+
+        if self.head is None:
+            return -1
+
+        curr = self.head
+        for i in range(index):
+            curr = curr.next
+        return curr.val
+
+    def addAtHead(self, val):
+        """
+        Add a node of value val before the first element of the linked list.
+        After the insertion, the new node will be the first node of the linked list.
+        :type val: int
+        :rtype: void
+        """
+        node = Node(val)
+        node.next = self.head
+        self.head = node
+
+        self.size += 1
+
+    def addAtTail(self, val):
+        """
+        Append a node of value val to the last element of the linked list.
+        :type val: int
+        :rtype: void
+        """
+        curr = self.head
+        if curr is None:
+            self.head = Node(val)
+        else:
+            while curr.next is not None:
+                curr = curr.next
+            curr.next = Node(val)
+
+        self.size += 1
+
+    def addAtIndex(self, index, val):
+        """
+        Add a node of value val before the index-th node in the linked list.
+        If index equals to the length of linked list, the node will be appended to the end of linked list.
+        If index is greater than the length, the node will not be inserted.
+        :type index: int
+        :type val: int
+        :rtype: void
+        """
+        if index < 0 or index > self.size:
+            return
+
+        if index == 0:
+            self.addAtHead(val)
+        else:
+            curr = self.head
+            for i in range(index - 1):
+                curr = curr.next
+            node = Node(val)
+            node.next = curr.next
+            curr.next = node
+
+            self.size += 1
+
+    def deleteAtIndex(self, index):
+        """
+        Delete the index-th node in the linked list, if the index is valid.
+        :type index: int
+        :rtype: void
+        """
+        if index < 0 or index >= self.size:
+            return
+
+        curr = self.head
+        if index == 0:
+            self.head = curr.next
+        else:
+            for i in range(index - 1):
+                curr = curr.next
+            curr.next = curr.next.next
+
+        self.size -= 1
+
+
