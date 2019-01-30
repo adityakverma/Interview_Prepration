@@ -1,0 +1,25 @@
+
+# 50 69 171 67 794 43 7 8 13 258 273 319 441 326 231
+# 149 415 204 279 66 268 365 794 223 202 343 812 805 400 357 168
+
+# 812 - Too much maths (Area of triangle)
+
+# DP - 279, 343
+
+
+Below two problems are almost same :
+
+LC-069 - sqrt() : Return the int value of sqrt. Example sqrt(9) = 3, but sqrt(8) returns 2 after truncate
+LC-367 - Valid Perfect Square - Same as above using Divide and Conquer but retuen True/False
+
+LC-067 and LC-002 (& LC-445) again have similar logic of carry.
+
+-----------------------------------
+Few Observations or Tips:
+1. How to declare the boolean array - See LC-204
+2. How to declare array w/ alphabets - See LC-168
+3. return list from string return [int(i) for i in str(arr)] - See LC066
+4. Using of math functions like sqrt, pow etc
+5. How to convert str to list [ use split or like LC066] and list to str [ use .join]
+------------------------------------
+
