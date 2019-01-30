@@ -1,0 +1,267 @@
+
+
+class Solution():
+
+################################################################################
+======================== ITERATIVE METHODS =====================================
+################################################################################
+
+# ==================== Graph BFS: Using Queue ======================================
+# Note-1: Use Dict to maintain map of visited nodes. And not visited flag matrix
+# Note-2: Same as Tree, except we just keep track of unvisited note via dict map
+# -----------------------------------------------------------------------------------
+
+    def BFS_Iterative(self, source):
+
+        queue = []
+        queue.append(source)
+
+        dist = defaultdict(list)
+        dist[source] = 0
+
+        while queue:
+            node = queue.pop(0)
+            print node,
+
+            for neighbour in self.graph[node]:
+                if neighbour not in dist:
+                    dist[neighbour] = dist[node] +1
+                    queue.append(neighbour)
+
+
+# ====================== Graph DFS: Using STACK ====================================
+# Note-1: Use Dict to maintain map of visited nodes. And not visited flag matrix
+# Note-2: Same as Tree, except we just keep track of unvisited note via dict map.
+# -----------------------------------------------------------------------------------
+
+    def DFS_Iterative(self, source):
+
+        stack = []
+        stack.append(source) # We append first so looks like PreOrder DFS - similar to tree.
+
+        dist = defaultdict(list)
+        dist[source] = 0
+
+        while stack:
+            node = stack.pop()
+            print node, # OR result.append(node)
+
+            for neighbour in self.graph[node]:
+                if neighbour not in dist:
+                    dist[neighbour] = dist[node] +1
+                    stack.append(neighbour)
+
+        print "\nDistance map is ",(dist.items()) # Additional Info
+
+# Note LC-133 Clone Grpah also uses same methods
+# Don't use recursion method for DFS, it's not giving correct answers.
+
+
+# ==================== TREE BFS: Using QUEUE =====================================
+
+    def BFS_Iterative(self, root):      # Similar to LC-102
+        # Base Case
+        if root is None:
+            return
+        
+        res, queue = [], [(root, 0)]    # Note: We are also appending levels in queue
+
+        while queue:
+            node, level = queue.pop(0)
+
+            if len(res) == level:
+                res.append([])
+            res[level].append(node.val)
+
+            if node.left is not None:
+                queue.append((node.left, level + 1))    # Starts with left side first
+            if node.right is not None:
+                queue.append((node.right, level + 1))   # then right side
+
+        return res  # Note: res was local variable within function, that's why we're returning.
+
+    # ----------------------------- Method-II --------------------------------
+
+    def BFSLevels_Iterative(self, root):
+
+        res = []
+        if not root:
+            return res
+        queue = [root]
+
+        while queue:
+            total, cnt = 0, len(queue)
+
+            for _ in xrange(cnt):
+                node = queue.pop(0)
+                res.append(node.val)
+
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+        return res
+
+# ========================= TREE DFS: Using STACK ================================
+
+    def DFS_Iterative(self,root):  # Iterative Preorder
+        # Base Case
+        if root is None:
+            return
+
+        result = []
+        stack = []
+        stack.append(root) # We append because we want root first in preOrder
+
+        while(stack):
+
+            node = stack.pop()
+            result.append(node.data)
+
+            # Push right and left children of the popped node to stack
+            if node.right is not None:
+                stack.append(node.right)
+            if node.left is not None:
+                stack.append(node.left)
+
+        return result
+
+# -------------- Optional -----------
+
+    def postOrderIterative(self,root):
+        # Base Case
+        if root is None:
+            return
+
+        # Create two stacks
+        s1 = []     # To push reverse postorder traversal to a stack
+        s2 = []     # To get reversed postorder elements in a stack
+        s1.append(root)
+
+        # Run while first stack s1 is not empty
+        while s1:
+            # Pop an item from s1 and append it to s2
+            node = s1.pop()
+            s2.append(node)
+
+            # Push left and right children of removed item to s1
+            if node.left is not None:
+                s1.append(node.left)
+            if node.right is not None:
+                s1.append(node.right)
+
+        # Print all elements of second stack
+        while s2:
+            node = s2.pop()
+            print node.data,
+
+# -------------- Optional -----------
+
+    def inorderTraversal(self, root): # LC-173 BST Iterator 
+
+        res, stack = [], []
+        while stack or root :
+            if root:
+                stack.append(root)
+                root = root.left  # Keep pushing left elements till end
+            else:
+                root = stack.pop() # Else pop root and then check right elements.
+                res.append(root.data)
+                root = root.right
+        return res
+
+
+################################################################################
+======================== RECURSION METHODS =====================================
+################################################################################
+
+
+RECURSION: MORE NEAT AND LESS PRONE TO ERRORS - BEST SUITED FOR TREE PROBLEMS. 
+--------------------------------------------------------------------------------
+# TREE- RECURIVE DFS:
+
+    def printInorder(self,root):
+        if root:
+            self.printInorder(root.left)
+            print(root.val),
+            self.printInorder(root.right)
+
+    def printPostorder(self,root):
+        if root:
+            self.printPostorder(root.left)
+            self.printPostorder(root.right)
+            print(root.val),
+
+    def printPreorder(self,root):
+        if root:
+            print(root.val),
+            self.printPreorder(root.left)
+            self.printPreorder(root.right)
+
+# ===========================================================================
+# TREE - RECURSIVE BFS:
+
+    def BFS_Recursive(self, root):
+        result = []
+        self.level_bfs(root, 0, result)
+        return result
+
+    def level_bfs(self, node, level, result):
+        if not node:
+            return
+
+        if level == len(result):
+            result.append([]) # when new level starts, then put new [] brackets
+        result[level].append(node.val)
+
+        if node.left is not None:
+            self.level_bfs(node.left, level + 1, result)  # Starts with left side first
+        if node.right is not None:
+            self.level_bfs(node.right, level + 1, result) # then right side
+
+    # So either you return result(which is local variable within function)
+    # like we did in Iterative approach of BFS.
+    # OR DON'T return if its passed as a parameter or declared global like here
+    # In short, return local variable result.
+
+# ============================================================================
+
+Most of questions in tree can be done via DFS (use Recursion for error free code)
+LC 543, 112,105,106,230 and many more
+
+except few questions like LC-199,103 which will need BFS ( again use Recursion)
+
+For Graph questions - Use iterative method only (BFS or DFS) using dict as map 
+for visited nodes. Connected component AND Topological Sort based questions will 
+be better be solved using Recursive DFS in graph ....
+
+
+# =============================================================================
+# GRAPH RECURSIVE DFS: GOOD FOR TOPOLOGICAL SORT & CONNECTED COMPONENT PROBLEMS
+# -----------------------------------------------------------------------------
+
+    def DFSUtil(self, node, dist):
+        print node,
+        # Recur for all the vertices adjacent to this vertex
+        for neighbour in self.graph[node]:
+            if neighbour not in dist.keys():
+                dist[neighbour] = dist[node] + 1  # maintain distance map
+                self.DFSUtil(neighbour, dist)
+
+    # The function to do DFS traversal. It uses recursive DFSUtil()
+    def DFS_Recursive(self ,source):
+        dist = defaultdict(list) 
+        dist[source]=0           
+        # Call the recursive helper function to print DFS traversal
+        self.DFSUtil(source, dist)
+
+        print "\nDistance map",\
+        dist.items()
+
+################################################################################
+
+
+
+
+
+

@@ -1,0 +1,1278 @@
+
+=============================================================================================
+https://stackoverflow.com/questions/12880718/how-many-traversals-need-to-be-known-to-construct-a-bst/12880809#12880809
+
+To construct a BST you need only one (not in-order) traversal.
+
+In general, to build a binary tree you are going to need two traversals, in order and pre-order for example.
+However, for the special case of BST - the in-order traversal is always the sorted array containing the elements,
+so you can always reconstruct it and use an algorithm to reconstruct a generic tree from pre-order and in-order
+traversals.
+
+So, the information that the tree is a BST, along with the elements in it (even unordered) are equivalent to an
+in-order traversal.
+
+=============================================================================================
+Serialization (I used preOrder) is good technique : See few questions for this category
+
+LC-297,449 - Serialization of Tree
+LC-508,652 - Subtree Type
+
+=============================================================================================
+Construction of Tree using given traversal
+
+LC - 297, 449 - Second part where we construct tree using given serialised data or string
+LC - 889, 105, 106 -  Construct Binary Tree from given two traversal
+
+Construct BST from:
+
+    1. Given PreOrder traversal
+    2. Given PostOrder traversal
+    3. Given InOrder Traversal - LC-109
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+TREE PROBLEM CLASSIFICATION:
+----------------------------
+
+653 637 687 543 513 102 103 107 404 501 515 662 199 111 94 104 - [ General BFS, DFS ]
+
+652 572 508 297 449 - [ Subtree AND  Serialization/ De-serialization]
+
+889 105 106 (297, 449) 654 - [ Tree Construction from two traversal ][ Max tree aka Cartesian Tree]
+
+112 257 124 - [ Path Sum ]
+
+100 101 - [ Symmetric/Same Tree ]
+
+617 (543 687) (653) - [ 2 sides/types - Merge Tree, Diameter, univalue ]
+
+538 863 671 606 235 236 230 173 116 117 114 109 98 - [ Misc -> Needs Re-classification ]
+
+094 144 145 102 - [ Iterative Tree Traversal ]
+
+654 - [Construct Cartesian Tree]
+
+671 - [Heap Based]
+
+218 315 732 - [ Segment Tree]
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+# =============================================================================================
+############### BFS ####################
+# =============================================================================================
+
+# Definition for a binary tree node.
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+# ---------------------------------------------------------------------------------------------
+103. Binary Tree Zigzag Level Order Traversal
+
+class Solution(object):
+
+    def zigzagLevelOrder(self, root):
+
+        result = []
+
+        def bfs(node,level):
+            if node is None:
+                return
+
+            if len(result) == level:
+                result.append([])
+
+            if level % 2 == 0:
+                result[level].append(node.val)    # Add to last - meaning Append
+            else:
+                result[level].insert(0, node.val) # Add to front- insert(0,root.val)
+
+            if node.left is not None:
+                bfs(node.left, level+1)
+            if node.right is not None:
+                bfs(node.right, level+1)
+
+        bfs(root,0)
+        return result
+
+# ---------------------------------------------------------------------------------------------
+199. Binary Tree Right Side View # See LC-199 Solution also
+
+class Solution(object):
+    def rightSideView(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        result = []
+        ans = []
+
+        def bfs(node, level):
+            if node is None:
+                return
+
+            if len(result) == level:
+                result.append([])
+            result[level].append(node.val)
+
+            if node.left is not None:
+                bfs(node.left, level+1)
+            if node.right is not None:
+                bfs(node.right, level+1)
+
+        bfs(root,0)
+
+        for i in range(len(result)):
+            ans.append(result[i][-1])
+
+        return ans
+
+# Note: In BFS, order of calling recursive function for left and right subtree matters.
+# If we are calling left before right subtree, then we will get traversal from L to R
+# Similarly for Iterative BFS, if we are adding left subtree element to queue before right
+
+    ## Level Order Traversal with Left side recursion first
+    def LeftSideView(self, root):  # Level Order where we call left side first for recursion
+
+        res = []
+
+		def bfs(node, level):
+			if node:
+				if len(res) == level:
+					res.append(node.val)  # Just append for first value from left for each level - others get ignored
+
+				bfs(node.left,  level + 1) # Left side first to get left side view
+				bfs(node.right, level + 1)
+
+        bfs(root,0)
+		return res
+
+    ## Level Order Traversal with Right side recursion first
+    def RightSideView(self, root):  # Level Order where we call right side first for recursion
+
+        res = []
+
+		def bfs(node, level):
+			if node:
+				if len(res) == level:
+					res.append(node.val)  # Just append for first value from right for each level - others get ignored
+
+				bfs(node.right, level + 1) # Right side first to get left side view
+				bfs(node.left,  level + 1)
+
+        bfs(root,0)
+		return res
+# ---------------------------------------------------------------------------------------------
+102. Binary Tree Level Order Traversal # Traditional Question
+
+class Solution(object):
+
+    def levelOrder(self, root):
+
+        result = []
+        def level_dfs(node, level):
+
+            if not node:
+                return
+
+            if level == len(result):
+                result.append([])
+            result[level].append(node.val)
+
+            if node.left is not None:
+                level_dfs(node.left, level+1)
+            if node.right is not None:
+                level_dfs(node.right, level+1)
+
+        level_dfs(root, 0)
+
+        return result
+
+# ---------------------------------------------------------------------------------------------
+662. Maximum Width of Binary Tree
+
+class Solution(object):
+
+    def widthOfBinaryTree(self, root):
+
+        self.res = 1
+        start = []
+
+        def bfs(root, level, index):
+
+            if not root:     # This is important exit condition - when recursion call reaches to leaf node,
+                return       # so from here it needs to return back recursively
+
+            if len(start) == level:  # Just append starting index of each level. So start[level] will have starting index of that level
+                start.append(index)
+            else:                    # Else res [currentIndex - startIndex + 1]
+                self.res = max(self.res, index - start[level] + 1)
+
+            bfs(root.left,  level + 1, index * 2)
+            bfs(root.right, level + 1, index * 2 + 1)
+
+        bfs(root, 0, 1)
+
+        return self.res
+
+# ---------------------------------------------------------------------------------------------
+513. Find Bottom Left Tree Value
+
+class Solution(object):
+    def findBottomLeftValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        result = []
+        def bfs(node,level):
+
+            if node is None:
+                return
+
+            if len(result) == level:
+                result.append([])
+            result[level].append(node.val)
+
+            if node.left is not None:
+                bfs(node.left, level+1)
+            if node.right is not None:
+                bfs(node.right, level+1)
+
+        bfs(root,0)
+        return result[-1][0]
+
+# ---------------------------------------------------------------------------------------------
+515. Find Largest Value in Each Tree Row
+
+class Solution(object):
+    def largestValues(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        result = []
+        ans = []
+
+        def bfs(node,level):
+
+            if node is None:
+                return
+
+            if len(result) == level:
+                result.append([])
+            result[level].append(node.val)
+
+            if node.left is not None:
+                bfs(node.left, level+1)
+            if node.right is not None:
+                bfs(node.right, level+1)
+
+        bfs(root,0)
+        for i in result:
+            ans.append(max(i))
+        return ans
+
+# ---------------------------------------------------------------------------------------------
+111. Minimum Depth of Binary Tree
+
+class Solution(object):
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        queue = []
+        depth = float('inf')
+
+        if root is None:
+            return 0
+        else:
+            queue.append((1, root)) # Note in all these depth question we insert levels also. Just like BFS traversal.
+
+        while queue:
+            level, node = queue.pop(0)
+
+            if not any((node.left, node.right)): # Only find depth if reached to end (leaf)
+                depth = min(depth, level)        # Note: We use min function
+
+            if node.left is not None:            # else keep increasing level and move downwards until we reach leaf.
+                queue.append((level+1, node.left))
+            if node.right is not None:
+                queue.append((level+1, node.right))
+
+        return depth
+
+
+# ---------------------------------------------------------------------------------------------
+637. Average of Levels in Binary Tree
+
+class Solution(object):
+    def averageOfLevels(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[float]
+        """
+
+        result = []
+        ans = []
+
+        def bfs(node, level):
+
+            if node is None:
+                return
+
+            if len(result) == level:
+                result.append([])
+            result[level].append(node.val)
+
+            if node.left is not None:
+                bfs(node.left, level+1)
+            if node.right is not None:
+                bfs(node.right, level+1)
+
+        bfs(root,0)
+        for i in range(len(result)):
+            ans.append((sum(result[i])*1.0 /len(result[i])))
+
+        return ans
+
+
+# ---------------------------------------------------------------------------------------------
+
+107. Binary Tree Level Order Traversal II [ Reverse or  bottom-up level order traversal ]
+
+class Solution(object):
+    def levelOrderBottom(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+
+        result = []
+        def level_dfs(node, level):
+
+            if not node:
+                return
+
+            if level == len(result):
+                result.append([])
+            result[level].append(node.val)
+
+            if node.left is not None:
+                level_dfs(node.left, level+1)
+            if node.right is not None:
+                level_dfs(node.right, level+1)
+
+        level_dfs(root, 0)
+
+        return result[::-1]
+
+
+# =============================================================================================
+############### DFS ####################
+# =============================================================================================
+
+404. Sum of Left Leaves
+
+class Solution(object):
+
+    def sumOfLeftLeaves(self, root): # Kind of PreOrder
+        self.sum = 0
+
+        def dfs(root):
+
+            if not root:
+                return 0
+
+            if root.left and not root.left.left and not root.left.right:
+                self.sum += root.left.val
+
+            dfs(root.left)
+            dfs(root.right)
+
+        dfs(root)
+        return self.sum
+
+# ---------------------------------------------------------------------------------------------
+104. Maximum Depth of Binary Tree
+
+class Solution(object):
+    def maxDepth(self, root):   # Recursive DFS (PreOrder) w/ levels which helps to track Depth of tree. Looks like BFS, but its not
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.max_depth = 0
+
+        def dfs(node,level):
+
+            if root is None:    # This is exit condition for all recursive calls to return.
+                return 0
+
+            if not node.left or not node.right:                  # Meaning if we have reached to end, then only find max depth
+                self.max_depth = max(self.max_depth, level + 1)  # Note: We use max function
+
+            if node.left is not None:
+                dfs(node.left, level + 1)
+            if node.right is not None:
+                dfs(node.right, level + 1)
+
+        dfs(root,0)
+        return self.max_depth
+
+# ---------------------------------------------------------------------------------------------
+111. Minimum Depth of Binary Tree
+
+This can done exactly same as maxDepth using DFS, but BFS is better so check there.
+
+    # ----------------------------------------------------------------------------------
+    # BFS Iteration using Queue
+    #
+    # The drawback of the DFS approach in this case is that all nodes should be visited
+    # to ensure that the minimum depth would be found. Therefore, this results in a
+    # O(N) complexity. One way to optimize the complexity is to use
+    # the BFS strategy. We iterate the tree level by level, and the first leaf we reach
+    #  corresponds to the minimum depth. As a result, we do not need to iterate all nodes.
+
+# ---------------------------------------------------------------------------------------------
+501. Find Mode in Binary Search Tree
+
+class Solution(object):     # PreOrder
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        count = collections.Counter()
+
+        if root is None:
+            return []
+
+        def dfs(node):
+            if node:
+                count[node.val] += 1
+                dfs(node.left)
+                dfs(node.right)
+
+        dfs(root)
+
+        max_ct = max(count.itervalues())
+        return [k for k, v in count.iteritems() if v == max_ct]
+
+# ---------------------------------------------------------------------------------------------
+687. Longest Univalue Path
+Same as LC-543
+
+class Solution(object):  # PostOrder
+
+    def longestUnivaluePath(self, root):
+        self.ans = 0
+
+        def arrow_length(node):
+
+            if not node: return 0
+
+            left_length = arrow_length(node.left) # This goes all the wat to bottom of tree (leaf) and then it return recursively.
+            right_length = arrow_length(node.right)
+
+            if node.left and node.left.val == node.val:
+                left_arrow = left_length + 1
+            else:
+                left_arrow = 0 # Reset value if its not continous
+
+            if node.right and node.right.val == node.val:
+                right_arrow = right_length + 1
+            else:
+                right_arrow = 0
+
+            self.ans = max(self.ans, left_arrow + right_arrow)
+
+            return max(left_arrow, right_arrow)
+
+        arrow_length(root)
+        return self.ans
+
+    # Time Complexity: O(N), where N is the number of nodes in the tree.
+    # We process every node once.
+    #
+    # Space Complexity: O(H), where H is the height of the tree. Our
+    # recursive call stack could be up to HHH layers deep.
+
+# ---------------------------------------------------------------------------------------------
+543. Diameter of Binary Tree
+Same as LC-687
+
+class Solution(object): # PostOrder
+
+    def diameterOfBinaryTree(self, root):
+
+        self.diameter = 0
+
+        def dfs(node):
+            if not node:
+                return 0
+
+            left_height = dfs(node.left)
+            right_height = dfs(node.right)
+
+            self.diameter = max(self.diameter, left_height + right_height)
+
+            return 1 + max(left_height, right_height)
+
+        dfs(root)
+        return self.diameter
+# ---------------------------------------------------------------------------------------------
+
+617. Merge Two Binary Trees # Similar style Diameter and Univalue.
+
+class Solution(object):
+
+    def mergeTree_Recursive(self, t1, t2):
+        if t1 and t2:
+            t1.val += t2.val
+            t1.left = self.mergeTrees(t1.left, t2.left)
+            t1.right = self.mergeTrees(t1.right, t2.right)
+            return t1
+        else:
+            return t1 or t2
+
+# Note: Since here we are dealing with 2 sides/ subtrees, so we do left = .. and right = ...
+# This is similar to Diameter and Univalue problem where we considering both sides for max length
+
+# ---------------------------------------------------------------------------------------------
+94. Binary Tree Inorder Traversal
+
+class Solution(object):
+
+    def inorderTraversal(self, root):
+
+        res, stack = [], []
+
+        while stack or root :
+            if root:
+                stack.append(root)
+                root = root.left  # Keep pushing left elements till end
+            else:
+                root = stack.pop() # Else pop root and then check right elements.
+                res.append(root.val)
+                root = root.right
+
+        return res
+
+# ---------------------------------------------------------------------------------------------
+653. Two Sum IV - Input is a BST
+
+class Solution(object):
+    def findTarget(self, root, k):
+
+        a = set()
+        self.f = False
+
+        def dfs(root, k):
+            if not root:
+                return
+
+            if root.val in a:
+                self.f = True
+            else:
+                a.add(k - root.val)
+
+            dfs(root.left, k)
+            dfs(root.right, k)
+
+        dfs(root, k)
+        return self.f
+
+
+# ---------------------------------------------------------------------------------------------
+101. Symmetric Tree
+
+class Solution(object):
+    #Recursive
+    def isSymmetric(self, root):
+
+        if root is None:
+            return True
+
+        def isMirror(left, right):
+
+            if left is None and right is None:
+                return True
+            if left is None or right is None:
+                return False
+
+            if left.val != right.val:
+                return False
+            else:
+                return isMirror(left.left, right.right) and isMirror(left.right, right.left)
+
+        return isMirror(root.left, root.right)
+
+    # Iterative
+    def isSymmetric_(self, root):
+
+        if not root:
+            return True
+
+        queue = []
+        queue.append((root.left, root.right))
+
+        while queue:
+            l, r = queue.pop(0)
+            if not l and not r:
+                continue
+            if not l or not r:
+                return False
+            if l.val != r.val:
+                return False
+
+            queue.append((l.left, r.right))
+            queue.append((l.right, r.left))
+
+        return True
+
+# ---------------------------------------------------------------------------------------------
+100. Same Tree
+
+class Solution(object):
+    def isSameTree(self, t1, t2):
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """
+        if not t1 and not t2:
+            return True
+        elif not t1 or not t2:
+            return False
+
+        elif t1.val!= t2.val:
+            return False
+        else:
+            return self.isSameTree(t1.left, t2.left) and self.isSameTree(t1.right, t2.right)
+
+# ---------------------------------------------------------------------------------------------
+
+116. Populating Next Right Pointers in Each Node
+You may assume that it is a perfect binary tree (ie, all leaves are at the same level, and every parent has two children).
+
+class Solution:
+    def connect(self, root):
+
+        if root is None:
+            return
+
+        if root.left:
+            root.left.next = root.right
+            if root.next:
+                root.right.next = root.next.left
+
+        self.connect(root.left)
+        self.connect(root.right)
+
+
+# ---------------------------------------------------------------------------------------------
+117. Populating Next Right Pointers in Each Node II
+It may be not  perfect binary tree.
+
+
+
+# ---------------------------------------------------------------------------------------------
+109. Convert Sorted List to Binary Search Tree
+
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+
+    def sortedListToBST_(self, head):
+        """
+        :type head: ListNode
+        :rtype: TreeNode
+        """
+
+        if not head:
+            return
+        if not head.next:
+            return TreeNode(head.val)
+
+        slow = head
+        fast = head.next.next  ### IMP: checkout LC-141 and LC-234 to see how we get mid pointer. Here we have tweaked somehow
+
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+
+        # tmp points to node after mid, since slow will be at middle
+        tmp = slow.next
+        # cut down the left child
+        slow.next = None
+
+        root = TreeNode(tmp.val)
+        root.left = self.sortedListToBST(head)
+        root.right = self.sortedListToBST(tmp.next)
+
+        return root
+
+# ---------------------------------------------------------------------------------------------
+# 114. Flatten Binary Tree to Linked List
+
+# Python Iterative O(n) time O(n) space solution
+# if a node has a left subtree, we will move it to the right , at the end, we will append the right tree!
+
+# Aditya: It simply flatten BST (InOrder wise) towards right side. Linked List word is misleading to me
+# This is purely a Tree question and has nothing to do with Linked List data structure.
+
+class Solution(object):
+
+    def flatten(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+
+        stack = []
+
+        while stack or root:
+            if root.right:
+                stack.append(root.right)
+
+            if root.left:  # First flatten all left nodes 1,2,3,4, then add right nodes 5, 6 ( already saved on stacks) to flattened left
+                root.right = root.left
+                root.left = None
+                root = root.right
+
+            elif stack:
+                root.right = stack.pop()
+                root = root.right
+            else:
+                root = None
+
+# ---------------------------------------------------------------------------------------------
+# 98. Validate Binary Search Tree
+
+class Solution(object):
+    def isValidBST(self, root):
+        self.last = -float('inf')
+        self.flag = True
+
+        self.inorder(root)
+        return self.flag
+
+    def inorder(self, root):
+
+        if not root:
+            return
+
+        self.inorder(root.left)
+
+        if self.last >= root.val:
+            self.flag = False
+        self.last = root.val
+
+        self.inorder(root.right)
+
+# ---------------------------------------------------------------------------------------------
+# 173. Binary Search Tree Iterator
+
+# Definition for a  binary tree node
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class BSTIterator:
+
+    # @param root, a binary search tree's root node
+    def __init__(self, root):
+        self.q=[]
+        self.allLeftIntoStack(root)
+
+    # @return a boolean, whether we have a next smallest number
+    def hasNext(self):
+        return len(self.q)>0
+
+    # @return an integer, the next smallest number
+    def next(self):
+        cur = self.q.pop()
+        self.allLeftIntoStack(cur.right)
+        return cur.val
+
+    def allLeftIntoStack(self,root):
+        while root:
+            self.q.append(root)
+            root=root.left
+
+# ---------------------------------------------------------------------------------------------
+# 606. Construct String from Binary Tree
+
+class Solution(object):
+    def tree2str(self, node):
+        """
+        :type t: TreeNode
+        :rtype: str
+        """
+
+        if not node:
+            return ""
+        else:
+            result =  str(node.val)+"("+self.tree2str(node.left)+")"+"("+self.tree2str(node.right)+")"
+
+        result = result.replace('()()', '')
+        result = result.replace('())', ')')
+        result = result.replace(')()',')')
+        return result
+
+# ---------------------------------------------------------------------------------------------
+# 230. Kth Smallest Element in a BST
+
+class Solution(object):
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        self.k = k
+        self.res = None
+        self.helper(root)
+        return self.res
+
+    def helper(self, node):
+        if not node:
+            return
+        self.helper(node.left)
+        self.k -= 1
+        if self.k == 0:
+            self.res = node.val
+            return
+        self.helper(node.right)
+
+# ---------------------------------------------------------------------------------------------
+# 671. Second Minimum Node In a Binary Tree
+
+class Solution(object):
+    def findSecondMinimumValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        import heapq
+
+        min_heap = []
+        k = 2
+        output = -1
+
+        def preorder(node):
+
+            if node is None:
+                return
+
+            if (not min_heap or node.val > abs(min_heap[0])):
+                heapq.heappush(min_heap, node.val)
+
+            if node.left:
+                preorder(node.left)
+            if node.right:
+                preorder(node.right)
+
+        preorder(root)
+
+        if len(min_heap) >= k:
+            while k:
+                output = heapq.heappop(min_heap)
+                k -= 1
+
+        return output
+
+# ---------------------------------------------------------------------------------------------
+# 538. Convert BST to Greater Tree
+
+class Solution(object):  # Inorder - Note its BST.
+
+    def __init__(self):
+        self.total = 0
+
+    def convertBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if root is not None:
+
+            self.convertBST(root.right)
+
+            self.total += root.val
+            root.val = self.total
+
+            self.convertBST(root.left)
+
+        return root
+
+# ---------------------------------------------------------------------------------------------
+# 235. Lowest Common Ancestor of a Binary Search Tree
+
+class Solution():
+
+    # Iterative method
+    def lowestCommonAncestor(self, root, p, q):
+
+        while root:
+            if root.val > p.val and root.val > q.val:
+                root = root.left
+
+            elif root.val < p.val and root.val < q.val:
+                root = root.right
+
+            else:
+                return root
+
+# ---------------------------------------------------------------------------------------------
+# 106. Construct Binary Tree from Inorder and Postorder Traversal
+
+class Solution(object):
+    def buildTree(self, inorder, postorder):
+        """
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        """
+        if not inorder or not postorder:
+            return None
+
+        root = TreeNode(postorder.pop())  # postorder.pop() because last element is root of tree. For PreOrder, we do postorder.pop(0)
+        inorderIndex = inorder.index(root.val)
+
+        root.right = self.buildTree(inorder[inorderIndex + 1:], postorder) # Reason we have right first - need to build the tree from right to left, because we are popping from the last element from the postorder array.
+        root.left = self.buildTree(inorder[:inorderIndex], postorder)
+
+        return root
+# ---------------------------------------------------------------------------------------------
+# 105. Construct Binary Tree from Preorder and Inorder Traversal
+
+class Solution(object):
+    def buildTree(self, preorder, inorder):
+        """
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        if not inorder or not preorder:
+            return None
+
+        root = TreeNode(preorder.pop(0))   # preorder.pop(0) because first element will be root of tree
+        inorderIndex = inorder.index(root.val)
+
+        root.left = self.buildTree( preorder, inorder[:inorderIndex]) # Reason we have left first - need to build the tree from left to right, because we are popping from the first element from the preorder array.
+        root.right = self.buildTree(preorder, inorder[inorderIndex + 1:])
+
+        return root
+# ---------------------------------------------------------------------------------------------
+# 889. Construct Binary Tree from Preorder and Postorder Traversal
+
+class Solution(object):
+    def constructFromPrePost(self, pre, post):
+        """
+        :type pre: List[int]
+        :type post: List[int]
+        :rtype: TreeNode
+        """
+
+        if not pre: return
+
+        root = TreeNode(pre[0])
+        pre, post = pre[1:], post[:-1]
+
+        if not pre: return root
+
+        i = post.index(pre[0])
+        root.left = self.constructFromPrePost(pre[:i+1], post[:i+1])
+        root.right = self.constructFromPrePost(pre[i+1:], post[i+1:])
+
+        return root
+# ---------------------------------------------------------------------------------------------
+# 257. Binary Tree Paths # PreOrder
+
+class Solution(object):
+
+    #  Recursion [ACCEPTED]
+    def binaryTreePaths_(self, root):
+        if not root:
+            return []
+        res = []
+        self.dfs(root, "", res)
+        return res
+
+    def dfs(self, root, path, res):
+
+        if not root.left and not root.right: # We only append when it reached leaf. Before that we keep appending to path.
+            res.append(path + str(root.val))
+
+        if root.left:
+            self.dfs(root.left, path + str(root.val) + "->", res)
+        if root.right:
+            self.dfs(root.right, path + str(root.val) + "->", res)
+
+    # --------------------------- Iterative = DFS + Stack [ACCEPTED] -------------------------------------
+
+    def binaryTreePaths(self, root):
+        if not root:
+            return []
+        res = []
+        stack = [(root, "")] # This is like calling dfs function in above
+
+        while stack:
+            node, path = stack.pop()
+
+            if not node.left and not node.right: # We only append when it reached leaf. Before that we keep appending to path.
+                res.append(path + str(node.val))
+
+            if node.right:
+                stack.append((node.right, path + str(node.val) + "->"))
+            if node.left:
+                stack.append((node.left, path + str(node.val) + "->"))
+
+        return res
+
+    # -------------------------------------------------------------------------------------------
+    # bfs + queue
+    def binaryTreePaths2(self, root):
+        if not root:
+            return []
+        res, queue = [], collections.deque([(root, "")])
+        while queue:
+            node, ls = queue.popleft()
+            if not node.left and not node.right:
+                res.append(ls+str(node.val))
+            if node.left:
+                queue.append((node.left, ls+str(node.val)+"->"))
+            if node.right:
+                queue.append((node.right, ls+str(node.val)+"->"))
+        return res
+
+# ---------------------------------------------------------------------------------------------
+# 112. Path Sum  # PreOrder
+
+class Solution():
+
+    def hasPathSum(self, node, sum):
+        if node == None:
+            return False
+
+        if node.left is None and node.right is None and node.val == sum: # IMP - Checking for leaf : When reached here, verify the sum
+            return True
+
+        # we should return True if either the left subtree or the right subtree has correct path sum.
+        return self.hasPathSum(node.left, sum - node.val) or self.hasPathSum(node.right, sum - node.val)
+
+    # ---------------------------------------------------
+    # DFS with stack
+    def hasPathSum_iterative_stack(self, root, sum):
+
+        if not root:
+            return False
+        stack = [(root, root.val)]
+
+        while stack:
+            curr, val = stack.pop()  # Since Stack is LIFO, so popping first item.
+            if not curr.left and not curr.right and val == sum:
+                return True
+            if curr.right:
+                stack.append((curr.right, val + curr.right.val))
+            if curr.left:
+                stack.append((curr.left, val + curr.left.val))
+        return False
+
+    # ---------------------------------------------------
+    # BFS with queue
+    def hasPathSum_iterative_queue(self, root, sum):
+        if not root:
+            return False
+        queue = [(root, sum - root.val)]
+        while queue:
+            curr, val = queue.pop(0) # Since Queue is FIFO, so popping first item.
+            if not curr.left and not curr.right and val == 0:
+                return True
+            if curr.left:
+                queue.append((curr.left, val - curr.left.val))
+            if curr.right:
+                queue.append((curr.right, val - curr.right.val))
+        return False
+
+# ---------------------------------------------------------------------------------------------
+# 124. Binary Tree Maximum Path Sum
+
+class Solution:
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+
+        self.current_max = float('-inf')
+
+        def maxPathSumHelper(root):
+
+            if not root:
+                return 0
+
+            left = maxPathSumHelper(root.left)
+            right = maxPathSumHelper(root.right)
+
+            left  = max(left, 0)
+            right = max(right, 0)
+
+            self.current_max = max(left + right + root.val, self.current_max)
+            return max(left, right) + root.val
+
+        maxPathSumHelper(root)
+        return self.current_max
+
+# ---------------------------------------------------------------------------------------------
+# 572. Subtree of Another Tree
+
+class Solution(object):
+
+
+    def isSubtree(self, t1, t2):
+
+        if not t1:
+            return False
+
+        if t1.val == t2.val and self.checkTree(t1, t2):
+            return True
+
+        return self.isSubtree(t1.left, t2) or self.isSubtree(t1.right, t2)
+
+
+    def checkTree(self, root1, root2):
+
+        if not root1 and not root2:
+                return True
+        elif root1 and not root2 or root2 and not root1:
+                return False
+
+        if root1.val != root2.val:
+                return False
+
+        return self.checkTree(root1.left, root2.left) and self.checkTree(root1.right, root2.right)
+
+# ---------------------------------------------------------------------------------------------
+# 652. Find Duplicate Subtrees
+
+class Solution(object):
+    def findDuplicateSubtrees(self, root):
+
+        dict = {}
+        result = []
+
+        def search(node):
+            if not node:
+                return "#"
+
+            node_string = str(node.val) + search(node.left) + search(node.right) # Serialization of that node
+
+            if node_string in dict:
+                if dict[node_string] == 1:
+                    result.append(node)
+                    # To avoid duplicates
+                    dict[node_string] = 2
+            else:
+                dict[node_string] = 1
+
+            return node_string
+
+        search(root)
+        return result
+
+# ---------------------------------------------------------------------------------------------
+# 508. Most Frequent Subtree Sum
+
+class Solution(object):
+    def findFrequentTreeSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if root == None: return []
+
+        def getSum(node):
+            if node == None: return 0
+            s = node.val + getSum(node.left) + getSum(node.right)
+            c[s] += 1
+            return s
+
+        c = collections.Counter()
+        getSum(root)
+        frequent = max(c.values())
+        return [s for s in c if c[s] == frequent]
+
+# ---------------------------------------------------------------------------------------------
+# 297. Serialize and Deserialize Binary Tree
+
+class Codec:
+
+    def serialize(self, root):
+        """ Encodes a tree to a single string.
+        :type root: TreeNode
+        :rtype: str
+        """
+        def rserialize(root, string): # a recursive helper function for the serialize() function."""
+
+            # check base case
+            if root is None:
+                string += 'None,'
+            else:
+                string += str(root.val) + ','
+                string = rserialize(root.left, string)
+                string = rserialize(root.right, string)
+            return string
+
+        return rserialize(root, '')
+
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        :type data: str
+        :rtype: TreeNode
+        """
+        def rdeserialize(l):  # a recursive helper function for deserialization
+
+            if l[0] == 'None':
+                l.pop(0)
+                return None # Just do nothing for string 'None' in serialised data. Simply return
+
+            root = TreeNode(l[0])
+            l.pop(0)
+            root.left = rdeserialize(l)
+            root.right = rdeserialize(l)
+            return root
+
+        return rdeserialize(data.split(','))
+
+# ---------------------------------------------------------------------------------------------
+
+
+
+
+
+
