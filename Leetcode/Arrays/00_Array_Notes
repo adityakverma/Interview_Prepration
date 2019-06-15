@@ -1,0 +1,71 @@
+
+#########################################
+
+NEW:
+
+#    1 4 42 56 15 53 121 238 33 31
+#    54 283 88 289 79 621 380 683 85 560
+
+#    128 78 126 48 153 277 57 162 26 152
+#    167 75 268 73 34 228 189 118 66 55
+
+#    163 280 209 832 689 766 674 746 605 243
+#    849 448 825 562 119 259 80 792 414 532
+
+#    106 90 667 714 731 729 665 485 900 643
+#    370 719 670 896 941 840
+
+
+REVIEW THIS LIST:
+=================
+1 4 42 56 15 53 121 238 33 31 54 283 88 289 79 621 380 683 85 560 128 78 126 48 153 277 57 162 26 152 167 75 268 73 34 228 189 118 66 55 163 280 209 832 689 766 674 746 605 243
+849 448 825 562 119 259 80 792 414 532 106 90 667 714 731 729 665 485 900 643 670 119 729 731 448
+
+-------------
+Sliding Window Based:
+
+209. Minimum Size Subarray Sum
+76. Minimum Window Substring
+3. Longest Substring Without Repeating Characters
+
+438	Find All Anagrams in a String
+# https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92007/Sliding-Window-algorithm-template-to-solve-all-the-Leetcode-substring-search-problem.
+# https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92007/Sliding-Window-algorithm-template-to-solve-all-the-Leetcode-substring-search-problem.?page=6
+# 340. Longest Substring with At Most K Distinct Characters
+# 159. Longest Substring with At Most Two Distinct Characters
+# 713. Subarray Product Less Than K
+
+https://leetcode.com/problems/minimum-window-substring/
+https://leetcode.com/problems/longest-substring-without-repeating-characters/
+https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
+https://leetcode.com/problems/find-all-anagrams-in-a-string/
+--------------
+
+Categories:
+===========
+Binary Search Based: See the problems in Searching Algorithm.
+Interval Based: Merge Interval, Insert Interval, Meeting Room - I, II, My Calender - I, II etc
+Stock Based:
+Intersection of Two Arrays I & II 350
+Merge K Sorted List - 21, 23 : See Offcial Solution
+Sort Based: Sort List -148, 75 280 324 253
+
+#########################################
+
+#   1 15 18 4 42 56 53 121 238 54 79 88
+#     33 31 283 289 621 380 683 85 454
+
+#     560 128 78 126 48 153 277 57 162
+#     26 152 167 75 268 73 34 228 189
+
+#     118 66 55 163 280 209 832 689 766
+#     674 746 605 243 849 448 825 562
+
+#     119 259 80 792 414 532 106 90 667
+#     714 731 729 665 485 900 643 370 719
+
+#########################################
+
+
+LC -1,15,18, 454 - 2Sum, 3Sum, 4Sum

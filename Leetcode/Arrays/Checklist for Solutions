@@ -1,0 +1,5 @@
+
+
+1. Should be ACCEPTED on LC (pass all tests).
+2. Should have Corner cases. Like i < 0 or list is empty.
+3. Should know time complexity and space complexity
