@@ -1,0 +1,133 @@
+
+
+######################################################################################
+
+TIPS:
+======
+
+Two things to solve string problems :
+1. Know well how to use string functions - strip, split, join etc
+2. Know well how to use regular expression - re.match, re.search, re.findall etc
+3. Expert in list slicing and using dictionary.
+
+List Slicing concept used in -
+substring - s[:3]
+reverse - s[::-1]
+increment in 2 - s[::2]
+
+split and join to convert sentence into list of word or viceversa [ Example LC 151]
+strip punctuantion is equivalent to re.findall(r'w+', ...) See LC819
+
+------------------
+
+using of split, isalnum .... revered, etc
+using slicing and while loop LC 165.
+Note to get substring u can use slicing like in work-break problem under Tries
+
+using replace and split - LC 537, 71
+Using Strip, split, lower, and regular expression like findall in LC 819
+check if substring"FFF" is presnt in string s - if "FFF" in s:  no need to iternate ot use find
+-------------------
+
+input= 'This is a string, with words!'
+output = input.split(" ")
+print output # ['This', 'is', 'a', 'string,', 'with', 'words!']
+
+input = ['This', 'is', 'a', 'string,', 'with', 'words!']
+output = "".join(input) OR " ".join(newstr) # Depending on if u need space or not.
+print output # This is a string with words!
+
+#######################################################################################
+
+THOUGHTS:
+
+technically isn't O(1) space impossible in python, since strings are immutable?
+ return a string at all means one has to be created in memory, as you can't modify in place.
+
+In C++ we move indices of string by saying s[i+1], so in python how ?
+s[1:]. provided we are considering everytime s[0] for matching or comparion - LC 44, 79
+
+---------------------------------------------------------------------------------------
+
+
+Latest Leetcode String Problems: 11/19 Based
+
+3 20 5 273 10 17 681 76 22 13
+929 49 159 8 151 91 819 722 67 336
+65 387 68 158 126 43 38 165 125 71
+772 443 44 647 680 28 340 271 730 833
+214 657 157 686 791 459 824 383 161 521
+859 899 345 520 890 541 606 809 916 583
+816
+
+-----
+
+3 20 5 273 10 17 681 76 22 13 929 49 159 8 151 91 819 722 67 336 65 387 68 158 126 43 38 165 125 71 772 443 44 647 680 28 340 271 730 833 214 657 157 686 791 459 824 383 161 521 859 899 345 520 890 541 606 809 916 583 816
+
+
+==============================================
+
+Similar Problems:
+
+Dynamic Programming: LC583. Delete Operation for Two Strings:: Similar- 712. Minimum ASCII Delete Sum for Two Strings:: LC-72 Edit Distance, 161. One Edit Distance
+
+KMP Based: 459, 28 ? - Pattern Matching Substring Search: https://www.youtube.com/watch?v=BXCEFAzhxGY
+
+=============================================
+Misc Tips:
+
+1. To start with Review all String functions and how we would implement  them if asked
+2. Pattern matching and Regular Expression in Python- which can help to get quick answer. But not best for Interviews
+
+# LC-541: As there might be case that i+k may go beyond length of string.
+Answer: In Python, slices are handled safely with respect to indices that are out of bounds.
+
+# LC 49: Understand how sorted works. It works on both list and string and output is list form:
+https://www.programiz.com/python-programming/methods/built-in/sorted
+
+
+
+=============================================
+
+Few things to solve string problems :
+1. Know well how to use string functions - strip, split, lower, alphanum etc
+2. Know well how to use regular expression - re.match, re.search, re.findall etc
+3. Expert in list slicing and using dictionary.
+
+=============================================
+'str' object does not support item assignment
+
+In Python, strings are not mutable, which means they cannot be changed.
+You can, however, replace the whole variable with the new version of the string.
+Example:
+text = ' ' + text[1:] # replaces first character with space
+
+=============================================
+
+Strings are immutable. By trying:
+text[0] = text[0].replace(letter," ")
+you are trying to access the string and change it, which is disallowed due to the
+string's immutability.
+
+=============================================
+
+In Python, strings are immutable, so you can't change their characters in-place.
+You can, however, do the following:
+
+for i in str:
+    srr += i
+The reasons this works is that it's a shortcut for:
+for i in str:
+    srr = srr + i
+The above creates a new string with each iteration, and stores the reference to that
+new string in srr.
+
+=============================================
+Trick:  you can, of course, do something like:
+
+>>> str1 = "mystring"
+>>> list1 = list(str1)
+>>> list1[5] = 'u'
+>>> str1 = ''.join(list1)
+>>> print(str1)
+mystrung
